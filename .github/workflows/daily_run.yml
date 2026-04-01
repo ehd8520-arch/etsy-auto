@@ -76,6 +76,11 @@ jobs:
           TEST_MODE=false
           EOF
 
+      - name: Restore Pinterest session
+        run: |
+          mkdir -p db
+          echo '${{ secrets.PINTEREST_SESSION }}' > db/pinterest_session.json
+
       - name: Check new orders (every hour)
         run: python -m monitor.order_alert
 
