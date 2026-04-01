@@ -11,7 +11,8 @@ logs/
 *.tmp
 
 # db/ — 민감 파일 전부 제외, 상태 파일만 허용
-db/
+# 주의: db/ 전체가 아닌 db/* 로 지정해야 !예외 패턴이 작동함
+db/*
 !db/order_alert_state.json
 !db/pinterest_pins.json
 

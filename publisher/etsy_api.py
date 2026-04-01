@@ -370,7 +370,7 @@ def create_draft_listing(
         "quantity": 999,
         "taxonomy_id": taxonomy_id,
         "who_made": "i_did",
-        "when_made": f"2020_{datetime.now().year}",
+        "when_made": "made_to_order",  # 디지털 다운로드 = 주문 시 생성
         "is_supply": False,
         "type": ETSY_LISTING_TYPE,
         "tags": tags[:13],
