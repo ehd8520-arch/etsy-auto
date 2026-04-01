@@ -1,0 +1,6 @@
+anthropic
+google-generativeai
+requests
+pillow
+playwright
+python-dotenv
