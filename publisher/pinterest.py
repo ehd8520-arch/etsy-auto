@@ -123,6 +123,9 @@ _PW_UA = (
     "Chrome/131.0.0.0 Safari/537.36"
 )
 
+# GitHub Actions 환경에서는 디스플레이 없으므로 headless 강제
+_HEADLESS = bool(os.environ.get("GITHUB_ACTIONS"))
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 항목 1-2: 세션 로드 + CSRF
@@ -211,11 +214,11 @@ async def _relogin_playwright() -> bool:
         logger.error("PINTEREST_EMAIL / PINTEREST_PASSWORD .env 미설정")
         return False
 
-    logger.info("Pinterest 세션 만료 → Playwright 재로그인 (headless=False)")
+    logger.info("Pinterest 세션 만료 → Playwright 재로그인 (headless=%s)", _HEADLESS)
     try:
         async with async_playwright() as p:
             browser = await p.chromium.launch(
-                headless=False,
+                headless=_HEADLESS,
                 args=["--disable-blink-features=AutomationControlled"],
             )
             try:
@@ -280,7 +283,7 @@ async def _do_pin_playwright(
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
-            headless=False,
+            headless=_HEADLESS,
             args=["--disable-blink-features=AutomationControlled"],
         )
         try:

@@ -10,7 +10,9 @@ Flow:
 """
 import json
 import logging
+import os
 import time
+from datetime import datetime
 import random
 import webbrowser
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -368,7 +370,7 @@ def create_draft_listing(
         "quantity": 999,
         "taxonomy_id": taxonomy_id,
         "who_made": "i_did",
-        "when_made": "2020_2025",
+        "when_made": f"2020_{datetime.now().year}",
         "is_supply": False,
         "type": ETSY_LISTING_TYPE,
         "tags": tags[:13],
@@ -598,6 +600,7 @@ def publish_product(product: Product, seo: SEOData, shop_id: str) -> Optional[Li
         description=seo.description,
         price=seo.price_usd,
         tags=seo.tags,
+        style=getattr(product, "style", ""),
     )
     if not listing_id:
         return None

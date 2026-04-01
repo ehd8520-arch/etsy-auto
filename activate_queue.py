@@ -10,6 +10,7 @@ Windows Task Scheduler가 매시간 실행:
     python activate_queue.py --dry    # 실제 발행 없이 확인만
     python activate_queue.py --list   # 큐 전체 목록
 """
+import os
 import sys
 import json
 import logging
@@ -192,9 +193,41 @@ def run(dry: bool = False) -> int:
         except Exception as e:
             logger.error("❌ 예외: %s — %s", label, e)
 
+    # 완료 항목 정리: done=True + 7일 이상 지난 항목 제거 (큐 파일 무한 증가 방지)
+    import time as _t
+    cutoff = _t.time() - 7 * 86400
+    queue = [
+        e for e in queue
+        if not e.get("done") or (
+            e.get("activated_at") and
+            datetime.fromisoformat(e["activated_at"]).timestamp() > cutoff
+        )
+    ]
+
     _save_queue(queue)
     logger.info("처리 완료: %d/%d개 발행", activated, len(pending))
+
+    # 발행 성공 시 Telegram 알림
+    if activated > 0:
+        _notify_telegram(f"🚀 Etsy 발행 완료 | {activated}개 활성화")
+
     return activated
+
+
+def _notify_telegram(message: str) -> None:
+    tg_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    tg_chat  = os.environ.get("TELEGRAM_CHAT_ID", "")
+    if not tg_token or not tg_chat:
+        return
+    try:
+        import requests as _req
+        _req.post(
+            f"https://api.telegram.org/bot{tg_token}/sendMessage",
+            json={"chat_id": tg_chat, "text": message},
+            timeout=10,
+        )
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":

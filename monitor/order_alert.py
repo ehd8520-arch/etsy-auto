@@ -39,11 +39,18 @@ def _load_state() -> dict:
 
 
 def _save_state(state: dict) -> None:
+    """원자적 쓰기: tmp → replace."""
     try:
         _STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-        _STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp = _STATE_FILE.with_suffix(".tmp")
+        tmp.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp.replace(_STATE_FILE)
     except Exception as e:
         logger.warning("상태 저장 실패: %s", e)
+        try:
+            tmp.unlink(missing_ok=True)
+        except Exception:
+            pass
 
 
 # ── Etsy 주문 조회 ────────────────────────────────────────────────────────────
@@ -65,7 +72,24 @@ def _get_recent_receipts(limit: int = 25) -> list:
             timeout=30,
         )
         if resp.status_code == 401:
-            logger.warning("토큰 만료 — 갱신 필요")
+            logger.warning("토큰 만료 — 자동 갱신 시도")
+            try:
+                from publisher.etsy_api import refresh_access_token
+                if refresh_access_token():
+                    # 갱신된 토큰으로 재시도
+                    import importlib, publisher.etsy_api as _ea
+                    new_token = _ea._access_token
+                    headers["Authorization"] = f"Bearer {new_token}"
+                    resp2 = requests.get(
+                        f"{_API_BASE}/application/shops/{_SHOP_ID}/receipts",
+                        headers=headers,
+                        params={"limit": limit, "was_paid": "true"},
+                        timeout=30,
+                    )
+                    if resp2.ok:
+                        return resp2.json().get("results", [])
+            except Exception as _re:
+                logger.error("토큰 갱신 실패: %s", _re)
             return []
         if not resp.ok:
             logger.warning("주문 조회 실패: %s %s", resp.status_code, resp.text[:200])
@@ -96,14 +120,19 @@ def _send_telegram(text: str) -> None:
         logger.error("텔레그램 전송 예외: %s", e)
 
 
+def _esc(text: str) -> str:
+    """Telegram HTML 파싱 모드용 특수문자 이스케이프."""
+    return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
 def _format_order_message(receipt: dict) -> str:
     receipt_id  = receipt.get("receipt_id", "?")
-    buyer       = receipt.get("name", "익명")
+    buyer       = _esc(receipt.get("name", "익명"))
     total       = receipt.get("grandtotal", {})
     amount      = total.get("amount", 0) / max(total.get("divisor", 100), 1)
-    currency    = total.get("currency_code", "USD")
+    currency    = _esc(total.get("currency_code", "USD"))
     items       = receipt.get("transactions", [])
-    item_titles = "\n".join(f"  • {t.get('title', '?')}" for t in items[:5])
+    item_titles = "\n".join(f"  • {_esc(t.get('title', '?'))}" for t in items[:5])
 
     return (
         f"🛍 <b>새 주문!</b>\n"

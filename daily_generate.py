@@ -529,7 +529,11 @@ def _get_niche_price(niche: str | None, shop_id: str) -> float:
 
 
 def _ensure_queue_scheduler():
-    """매시간 activate_queue.py 실행 Task가 없으면 자동 등록."""
+    """매시간 activate_queue.py 실행 Task가 없으면 자동 등록 (Windows 전용)."""
+    import platform
+    if platform.system() != "Windows":
+        logger.info("Task Scheduler 등록 건너뜀 (Windows 전용, 현재: %s)", platform.system())
+        return
     import subprocess, sys as _sys
     task_name = "EtsyQueueActivate"
     check = subprocess.run(
@@ -663,8 +667,15 @@ def main():
         previews = sorted(Path(__file__).parent.glob("preview_*.html"),
                           key=lambda p: p.stat().st_mtime, reverse=True)
         if previews:
-            import os as _os
-            _os.startfile(str(previews[0].resolve()))
+            import platform as _plat, subprocess as _sub
+            path_str = str(previews[0].resolve())
+            if _plat.system() == "Windows":
+                import os as _os
+                _os.startfile(path_str)
+            elif _plat.system() == "Darwin":
+                _sub.Popen(["open", path_str])
+            else:
+                _sub.Popen(["xdg-open", path_str])
             logger.info("미리보기 오픈: %s", previews[0].name)
         else:
             logger.warning("미리보기 파일 없음. 먼저 daily_generate.py 를 실행하세요.")

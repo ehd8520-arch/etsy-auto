@@ -1,5 +1,6 @@
 anthropic
 google-generativeai
+openai
 requests
 pillow
 playwright

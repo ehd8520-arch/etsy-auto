@@ -3,7 +3,7 @@ name: Daily Etsy Auto Generate
 on:
   schedule:
     - cron: '0 0 * * *'   # 매일 UTC 00:00 (한국시간 09:00) — 상품 생성
-    - cron: '0 * * * *'   # 매시간 — 주문 알림 체크
+    - cron: '0 * * * *'   # 매시간 — 주문 알림 + 큐 활성화
   workflow_dispatch:       # 수동 실행 가능
 
 jobs:
@@ -11,12 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:
-      contents: read
-      secrets: write
+      contents: write      # state 파일 commit-back 필요
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -87,9 +88,54 @@ jobs:
           mkdir -p db
           echo '${{ secrets.PINTEREST_SESSION }}' > db/pinterest_session.json
 
+      - name: Restore state files (order alert + pinterest pins)
+        run: |
+          mkdir -p db
+          # 파일이 없으면 초기값 생성 (첫 실행 또는 삭제된 경우)
+          [ -f db/order_alert_state.json ] || echo '{"seen_receipt_ids":[]}' > db/order_alert_state.json
+          [ -f db/pinterest_pins.json ]    || echo '{"pins":{},"daily":{}}' > db/pinterest_pins.json
+
       - name: Check new orders (every hour)
         run: python -m monitor.order_alert
 
+      - name: Activate queued listings (every hour)
+        run: python activate_queue.py
+
       - name: Run daily generate (only at 09:00 KST)
         if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
-        run: python daily_generate.py
+        run: python daily_generate.py --publish
+
+      - name: Run price updater (weekly on Monday 09:00 KST)
+        if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          DAY=$(date +%u)
+          if [ "$DAY" = "1" ]; then
+            echo "월요일 — 가격 업데이트 실행"
+            python price_updater.py
+          else
+            echo "월요일 아닌 날 — 가격 업데이트 스킵 (오늘은 요일 $DAY)"
+          fi
+
+      - name: Run stale listing pruner (monthly on 1st)
+        if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          DAY=$(date +%d)
+          if [ "$DAY" = "01" ]; then
+            echo "매월 1일 — stale pruner 실행"
+            python stale_listing_pruner.py
+          else
+            echo "1일 아닌 날 — pruner 스킵 (오늘은 $DAY일)"
+          fi
+
+      - name: Save state files back to repo
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # 민감 파일 제외하고 상태 파일만 추가
+          git add daily_progress.json publish_queue.json 2>/dev/null || true
+          git add db/order_alert_state.json db/pinterest_pins.json 2>/dev/null || true
+          git add monitor/__init__.py 2>/dev/null || true
+          # 변경사항 있을 때만 커밋
+          git diff --staged --quiet || git commit -m "chore: auto-save state [skip ci]"
+          git push origin HEAD 2>/dev/null || true
