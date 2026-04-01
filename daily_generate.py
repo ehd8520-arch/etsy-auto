@@ -281,10 +281,11 @@ def get_next_combos(count: int) -> list[dict]:
                  and _combo_key(c) not in drafted_keys]
 
     if remaining:
-        # 시즌 부스트: 아직 안 만든 시즌 조합을 앞으로 당김
+        # 시즌 부스트: 아직 안 만든 시즌 조합을 앞으로 당김 (드래프트된 것도 제외)
         seasonal = [
             c for c in _get_seasonal_boosts()
             if _combo_key(c) not in published_keys
+            and _combo_key(c) not in drafted_keys
         ]
         if seasonal:
             seasonal_keys = {_combo_key(c) for c in seasonal}
