@@ -7,3 +7,9 @@ __pycache__\
 build\ 
 dist\ 
 logs\ 
+db/pinterest_session.json
+db/pinterest_session.bak.json
+db/
+seo/__pycache__/
+config/__pycache__/
+**/__pycache__/
