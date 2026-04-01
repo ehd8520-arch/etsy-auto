@@ -1,0 +1,204 @@
+# -*- coding: utf-8 -*-
+"""
+activate_queue.py — publish_queue.json에서 발행 시각이 된 드래프트를 활성화.
+
+Windows Task Scheduler가 매시간 실행:
+    python activate_queue.py
+
+수동 실행:
+    python activate_queue.py          # 지금 발행할 항목만
+    python activate_queue.py --dry    # 실제 발행 없이 확인만
+    python activate_queue.py --list   # 큐 전체 목록
+"""
+import sys
+import json
+import logging
+import argparse
+from datetime import datetime
+from pathlib import Path
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+
+LOG_DIR = Path(__file__).parent / "logs"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+log_file = LOG_DIR / f"queue_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%H:%M:%S",
+    handlers=[
+        logging.FileHandler(str(log_file), encoding="utf-8"),
+        logging.StreamHandler(sys.stdout),
+    ],
+)
+logger = logging.getLogger("activate_queue")
+
+sys.path.insert(0, str(Path(__file__).parent))
+
+QUEUE_FILE = Path(__file__).parent / "publish_queue.json"
+
+
+def _load_queue() -> list:
+    if not QUEUE_FILE.exists():
+        return []
+    try:
+        with open(QUEUE_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+
+def _save_queue(queue: list):
+    """원자적 쓰기: 임시 파일 → rename → 크래시 시 기존 큐 보존."""
+    tmp = QUEUE_FILE.with_suffix(".tmp")
+    try:
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(queue, f, ensure_ascii=False, indent=2)
+        tmp.replace(QUEUE_FILE)
+    except Exception as e:
+        logger.warning("큐 저장 실패: %s", e)
+        try:
+            tmp.unlink(missing_ok=True)
+        except Exception:
+            pass
+
+
+def print_queue():
+    queue = _load_queue()
+    if not queue:
+        logger.info("큐가 비어 있습니다.")
+        return
+
+    now = datetime.now()
+    logger.info("")
+    logger.info("=" * 60)
+    logger.info("  발행 큐 현황 (%d개)", len(queue))
+    logger.info("=" * 60)
+    for entry in queue:
+        publish_at = datetime.fromisoformat(entry["publish_at"])
+        status = "✅ 완료" if entry.get("done") else (
+            "⏰ 대기 중" if publish_at > now else "🔴 발행 예정 (미실행)"
+        )
+        logger.info("  %s  %s  →  %s  [%s]",
+                    entry["publish_at"][:16],
+                    entry.get("label", entry["listing_id"]),
+                    entry["shop_id"],
+                    status)
+
+
+def _pin_from_queue(entry: dict) -> None:
+    """큐 항목의 pinterest_info로 핀 발행. 실패해도 메인 흐름 중단 없음."""
+    try:
+        from publisher.pinterest import pin_listing
+        info       = entry["pinterest_info"]
+        listing_id = entry["listing_id"]
+        image_path = info.get("image_path", "")
+        if not image_path:
+            logger.warning("Pinterest 핀 건너뜀 (이미지 경로 없음): listing_id=%s", listing_id)
+            return
+        from pathlib import Path as _Path
+        if not _Path(image_path).exists():
+            logger.warning("Pinterest 핀 건너뜀 (이미지 파일 없음): %s", image_path)
+            return
+        etsy_url = f"https://www.etsy.com/listing/{listing_id}"
+        result = pin_listing(
+            listing_id    = listing_id,
+            listing_title = info.get("title", "Digital Planner Printable"),
+            image_path    = image_path,
+            etsy_url      = etsy_url,
+            niche         = info.get("niche"),
+            seo_tags      = info.get("tags"),
+        )
+        status = result.get("status", "error")
+        if status == "success":
+            logger.info("📌 Pinterest 핀 완료: listing_id=%s pin_id=%s",
+                        listing_id, result.get("pin_id"))
+        elif status == "duplicate":
+            logger.info("📌 Pinterest 중복 건너뜀: listing_id=%s", listing_id)
+        else:
+            logger.warning("📌 Pinterest 핀 상태=%s: listing_id=%s", status, listing_id)
+    except Exception as e:
+        logger.warning("Pinterest 핀 실패 (건너뜀): %s", e)
+
+
+def run(dry: bool = False) -> int:
+    """발행 시각이 된 드래프트 활성화. 처리한 항목 수 반환."""
+    queue = _load_queue()
+    if not queue:
+        logger.info("큐 비어 있음 — 처리할 항목 없음")
+        return 0
+
+    now = datetime.now()
+    pending = [
+        e for e in queue
+        if not e.get("done") and datetime.fromisoformat(e["publish_at"]) <= now
+    ]
+
+    if not pending:
+        next_items = [e for e in queue if not e.get("done")]
+        if next_items:
+            next_time = min(e["publish_at"] for e in next_items)
+            logger.info("발행 대기 중 — 다음 발행: %s", next_time[:16])
+        else:
+            logger.info("모든 항목 발행 완료")
+        return 0
+
+    logger.info("발행 처리: %d개", len(pending))
+
+    if dry:
+        for e in pending:
+            logger.info("  [DRY] %s — %s", e.get("label", e["listing_id"]), e["publish_at"][:16])
+        return len(pending)
+
+    try:
+        from publisher.etsy_api import activate_listing
+    except ImportError as e:
+        logger.error("etsy_api 임포트 실패: %s", e)
+        return 0
+
+    activated = 0
+    for entry in queue:
+        if entry.get("done"):
+            continue
+        publish_at = datetime.fromisoformat(entry["publish_at"])
+        if publish_at > now:
+            continue
+
+        listing_id = entry["listing_id"]
+        shop_id    = entry["shop_id"]
+        label      = entry.get("label", listing_id)
+
+        try:
+            ok = activate_listing(shop_id, listing_id)
+            if ok:
+                entry["done"] = True
+                entry["activated_at"] = now.strftime("%Y-%m-%dT%H:%M:%S")
+                activated += 1
+                logger.info("🚀 발행 완료: %s (listing_id=%s)", label, listing_id)
+                # Pinterest 핀 발행 (큐 항목에 pinterest_info가 있을 때)
+                if entry.get("pinterest_info"):
+                    _pin_from_queue(entry)
+            else:
+                logger.error("❌ 발행 실패: %s (listing_id=%s)", label, listing_id)
+        except Exception as e:
+            logger.error("❌ 예외: %s — %s", label, e)
+
+    _save_queue(queue)
+    logger.info("처리 완료: %d/%d개 발행", activated, len(pending))
+    return activated
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="발행 큐 처리")
+    parser.add_argument("--dry",  action="store_true", help="실제 발행 없이 확인만")
+    parser.add_argument("--list", action="store_true", help="큐 목록 출력")
+    args = parser.parse_args()
+
+    if args.list:
+        print_queue()
+    else:
+        run(dry=args.dry)

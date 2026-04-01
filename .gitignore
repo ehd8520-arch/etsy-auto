@@ -1,0 +1,9 @@
+.env 
+config\.env 
+assets\bg_cache\ 
+output\ 
+*.html 
+__pycache__\ 
+build\ 
+dist\ 
+logs\ 

@@ -1,0 +1,940 @@
+{
+  "worksheet_keywords": {
+    "timestamp": "2026-03-28T22:01:54.513106",
+    "category": "worksheet",
+    "data": [
+      {
+        "keyword": "printable worksheets",
+        "volume_score": 64.8,
+        "competition": "high",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 84.3
+      },
+      {
+        "keyword": "addition worksheets",
+        "volume_score": 48.8,
+        "competition": "medium",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 63.5
+      },
+      {
+        "keyword": "printable worksheet",
+        "volume_score": 55.0,
+        "competition": "medium",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 55.0
+      },
+      {
+        "keyword": "free printable worksheet",
+        "volume_score": 31.8,
+        "competition": "medium",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 41.3
+      },
+      {
+        "keyword": "addition worksheet",
+        "volume_score": 36.3,
+        "competition": "medium",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 36.3
+      },
+      {
+        "keyword": "learning printable",
+        "volume_score": 33.6,
+        "competition": "medium",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 33.6
+      },
+      {
+        "keyword": "preschool printable",
+        "volume_score": 30.7,
+        "competition": "medium",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 30.7
+      },
+      {
+        "keyword": "kindergarten worksheet",
+        "volume_score": 27.2,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 27.2
+      },
+      {
+        "keyword": "subtraction worksheet",
+        "volume_score": 21.4,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 21.4
+      },
+      {
+        "keyword": "counting worksheet",
+        "volume_score": 19.3,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 19.3
+      },
+      {
+        "keyword": "teacher printable",
+        "volume_score": 14.4,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 14.4
+      },
+      {
+        "keyword": "tracing worksheet",
+        "volume_score": 13.8,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 13.8
+      },
+      {
+        "keyword": "shapes worksheet",
+        "volume_score": 11.2,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 11.2
+      },
+      {
+        "keyword": "classroom worksheet",
+        "volume_score": 9.8,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 9.8
+      },
+      {
+        "keyword": "kids activity printable",
+        "volume_score": 4.9,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 4.9
+      },
+      {
+        "keyword": "math addition worksheets",
+        "volume_score": 2.5,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 3.3
+      },
+      {
+        "keyword": "phonics worksheet",
+        "volume_score": 2.3,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 2.3
+      },
+      {
+        "keyword": "alphabet worksheet",
+        "volume_score": 1.6,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.6
+      },
+      {
+        "keyword": "sight words printable",
+        "volume_score": 1.5,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.5
+      },
+      {
+        "keyword": "educational printable",
+        "volume_score": 1.4,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.4
+      },
+      {
+        "keyword": "math worksheet printable",
+        "volume_score": 0.9,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.9
+      },
+      {
+        "keyword": "handwriting practice printable",
+        "volume_score": 0.8,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.8
+      },
+      {
+        "keyword": "domino addition worksheet",
+        "volume_score": 0.3,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.4
+      },
+      {
+        "keyword": "fraction addition worksheet",
+        "volume_score": 0.2,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.3
+      },
+      {
+        "keyword": "number tracing printable",
+        "volume_score": 0.3,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.3
+      },
+      {
+        "keyword": "addition worksheet for kindergarten",
+        "volume_score": 0.2,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.2
+      },
+      {
+        "keyword": "homeschool worksheet",
+        "volume_score": 0.2,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.2
+      },
+      {
+        "keyword": "first grade addition worksheets",
+        "volume_score": 0.1,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.1
+      },
+      {
+        "keyword": "3 digit addition worksheet",
+        "volume_score": 0.1,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.1
+      }
+    ]
+  },
+  "planner_keywords": {
+    "timestamp": "2026-03-28T22:53:52.340221",
+    "category": "planner",
+    "data": [
+      {
+        "keyword": "digital planner",
+        "volume_score": 44.5,
+        "competition": "medium",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 44.5
+      },
+      {
+        "keyword": "best digital planner",
+        "volume_score": 17.9,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 23.3
+      },
+      {
+        "keyword": "free printable planner",
+        "volume_score": 16.4,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 21.3
+      },
+      {
+        "keyword": "printable planner",
+        "volume_score": 20.6,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 20.6
+      },
+      {
+        "keyword": "ipad digital planner",
+        "volume_score": 8.3,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 10.8
+      },
+      {
+        "keyword": "habit tracker printable",
+        "volume_score": 5.6,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 5.6
+      },
+      {
+        "keyword": "goodnotes planner",
+        "volume_score": 4.8,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 4.8
+      },
+      {
+        "keyword": "budget planner printable",
+        "volume_score": 2.5,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 2.5
+      },
+      {
+        "keyword": "meal planner printable",
+        "volume_score": 2.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 2.0
+      },
+      {
+        "keyword": "printable planner pages",
+        "volume_score": 1.2,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 1.6
+      },
+      {
+        "keyword": "reading log printable",
+        "volume_score": 1.2,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.2
+      },
+      {
+        "keyword": "wedding planner printable",
+        "volume_score": 1.2,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.2
+      },
+      {
+        "keyword": "teacher planner printable",
+        "volume_score": 1.1,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.1
+      },
+      {
+        "keyword": "free printable planner pdf",
+        "volume_score": 0.8,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 1.1
+      },
+      {
+        "keyword": "weekly planner printable",
+        "volume_score": 1.1,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.1
+      },
+      {
+        "keyword": "2026 habit tracker printable",
+        "volume_score": 0.7,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.9
+      },
+      {
+        "keyword": "undated planner printable",
+        "volume_score": 0.9,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.9
+      },
+      {
+        "keyword": "adhd planner printable",
+        "volume_score": 0.6,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.6
+      },
+      {
+        "keyword": "self care planner",
+        "volume_score": 0.4,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.4
+      },
+      {
+        "keyword": "daily planner printable",
+        "volume_score": 0.4,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.4
+      },
+      {
+        "keyword": "goal setting planner",
+        "volume_score": 0.2,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.2
+      },
+      {
+        "keyword": "cute digital planner",
+        "volume_score": 0.1,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.1
+      },
+      {
+        "keyword": "student planner printable",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "gratitude journal printable",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "daily habit tracker printable",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "fitness planner printable",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "free digital planner 2026 pdf download",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "free habit tracker printable",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "mom planner printable",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "life planner printable",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      }
+    ]
+  },
+  "spreadsheet_keywords": {
+    "timestamp": "2026-03-28T22:55:09.668656",
+    "category": "spreadsheet",
+    "data": [
+      {
+        "keyword": "monthly budget",
+        "volume_score": 58.6,
+        "competition": "medium",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 76.2
+      },
+      {
+        "keyword": "excel budget template",
+        "volume_score": 38.7,
+        "competition": "medium",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 38.7
+      },
+      {
+        "keyword": "budget spreadsheet",
+        "volume_score": 32.7,
+        "competition": "medium",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 32.7
+      },
+      {
+        "keyword": "health tips",
+        "volume_score": 21.9,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 28.5
+      },
+      {
+        "keyword": "small business spreadsheet",
+        "volume_score": 7.7,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 7.7
+      },
+      {
+        "keyword": "google sheets budget template",
+        "volume_score": 5.7,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 5.7
+      },
+      {
+        "keyword": "debt payoff spreadsheet",
+        "volume_score": 4.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 4.0
+      },
+      {
+        "keyword": "create a budget spreadsheet",
+        "volume_score": 2.1,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 2.8
+      },
+      {
+        "keyword": "best budget spreadsheet",
+        "volume_score": 1.7,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 2.3
+      },
+      {
+        "keyword": "household budget template",
+        "volume_score": 1.8,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.8
+      },
+      {
+        "keyword": "free budget spreadsheet",
+        "volume_score": 1.2,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 1.6
+      },
+      {
+        "keyword": "budget spreadsheet template",
+        "volume_score": 1.5,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.5
+      },
+      {
+        "keyword": "wedding budget spreadsheet",
+        "volume_score": 1.4,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.4
+      },
+      {
+        "keyword": "zero based budget spreadsheet",
+        "volume_score": 1.1,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.1
+      },
+      {
+        "keyword": "spreadsheet for budget",
+        "volume_score": 0.7,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.9
+      },
+      {
+        "keyword": "side hustle income tracker",
+        "volume_score": 0.4,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.4
+      },
+      {
+        "keyword": "best excel budget template",
+        "volume_score": 0.1,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.2
+      },
+      {
+        "keyword": "monthly budget spreadsheet",
+        "volume_score": 0.2,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.2
+      },
+      {
+        "keyword": "excel budget template free",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.1
+      },
+      {
+        "keyword": "paycheck budget spreadsheet",
+        "volume_score": 0.1,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.1
+      },
+      {
+        "keyword": "financial planner spreadsheet",
+        "volume_score": 0.1,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.1
+      },
+      {
+        "keyword": "income tracker spreadsheet",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "net worth tracker spreadsheet",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "biweekly budget spreadsheet",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "sinking funds tracker",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "savings tracker spreadsheet",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "bill tracker spreadsheet",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "microsoft excel budget template",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "expense tracker spreadsheet",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      }
+    ]
+  },
+  "social_media_template_keywords": {
+    "timestamp": "2026-03-31T10:08:42.339600",
+    "category": "social_media_template",
+    "data": []
+  },
+  "resume_template_keywords": {
+    "timestamp": "2026-03-31T10:11:41.327325",
+    "category": "resume_template",
+    "data": []
+  },
+  "wall_art_keywords": {
+    "timestamp": "2026-03-31T12:21:08.731137",
+    "category": "wall_art",
+    "data": [
+      {
+        "keyword": "living room wall art",
+        "volume_score": 30.6,
+        "competition": "medium",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 30.6
+      },
+      {
+        "keyword": "lidl near me",
+        "volume_score": 19.3,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 25.1
+      },
+      {
+        "keyword": "printable wall art",
+        "volume_score": 18.2,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 18.2
+      },
+      {
+        "keyword": "motivational wall art",
+        "volume_score": 11.7,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 11.7
+      },
+      {
+        "keyword": "large wall art",
+        "volume_score": 8.9,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 11.6
+      },
+      {
+        "keyword": "geometric wall art print",
+        "volume_score": 8.3,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 8.3
+      },
+      {
+        "keyword": "minimalist wall art print",
+        "volume_score": 7.5,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 7.5
+      },
+      {
+        "keyword": "bedroom wall art print",
+        "volume_score": 4.3,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 4.3
+      },
+      {
+        "keyword": "watercolor wall art print",
+        "volume_score": 2.4,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 2.4
+      },
+      {
+        "keyword": "nordic wall art print",
+        "volume_score": 1.1,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.1
+      },
+      {
+        "keyword": "line art printable",
+        "volume_score": 1.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 1.0
+      },
+      {
+        "keyword": "japandi wall art print",
+        "volume_score": 0.8,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.8
+      },
+      {
+        "keyword": "celestial wall art printable",
+        "volume_score": 0.7,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.7
+      },
+      {
+        "keyword": "mid century modern art print",
+        "volume_score": 0.6,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.6
+      },
+      {
+        "keyword": "office wall art printable",
+        "volume_score": 0.5,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.5
+      },
+      {
+        "keyword": "botanical wall art printable",
+        "volume_score": 0.5,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.5
+      },
+      {
+        "keyword": "abstract wall art printable",
+        "volume_score": 0.4,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.4
+      },
+      {
+        "keyword": "gallery wall printable",
+        "volume_score": 0.2,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.2
+      },
+      {
+        "keyword": "nursery wall art printable",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "boho wall art printable",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "living room wall art ideas",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "motivational wall art for office",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "coastal wall art printable",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "floral wall art printable",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": false,
+        "seasonal": false,
+        "final_score": 0.0
+      },
+      {
+        "keyword": "free printable wall art",
+        "volume_score": 0.0,
+        "competition": "low",
+        "trending": true,
+        "seasonal": false,
+        "final_score": 0.0
+      }
+    ]
+  }
+}

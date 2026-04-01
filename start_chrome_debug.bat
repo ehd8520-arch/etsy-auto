@@ -1,0 +1,13 @@
+@echo off
+chcp 65001 >nul
+echo Chrome 종료 중...
+taskkill /F /IM chrome.exe 2>nul
+timeout /t 4 /nobreak >nul
+echo Chrome 디버깅 모드로 시작...
+start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222 --user-data-dir="%USERPROFILE%\AppData\Local\Google\Chrome\User Data" --no-first-run --restore-last-session --disable-session-crashed-bubble https://www.etsy.com
+echo 12초 대기...
+timeout /t 12 /nobreak >nul
+cd /d "%~dp0"
+echo Playwright 실행...
+python setup_etsy_shop.py
+pause
