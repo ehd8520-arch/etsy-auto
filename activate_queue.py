@@ -101,7 +101,12 @@ def _pin_from_queue(entry: dict) -> None:
             logger.warning("Pinterest 핀 건너뜀 (이미지 경로 없음): listing_id=%s", listing_id)
             return
         from pathlib import Path as _Path
-        if not _Path(image_path).exists():
+        # 상대경로면 절대경로로 변환
+        _img = _Path(image_path)
+        if not _img.is_absolute():
+            _img = _Path(__file__).parent / _img
+        image_path = str(_img)
+        if not _img.exists():
             logger.warning("Pinterest 핀 건너뜀 (이미지 파일 없음): %s", image_path)
             return
         etsy_url = f"https://www.etsy.com/listing/{listing_id}"

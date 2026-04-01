@@ -808,9 +808,15 @@ def main():
                 _prod = item["product"]
                 _seo  = item["seo"]
                 _imgs = getattr(_prod, "mockup_paths", []) or []
+                # 상대경로로 저장 (Windows/Linux 모두 호환)
+                _img_abs = Path(_imgs[0]) if _imgs else None
+                try:
+                    _img_rel = str(_img_abs.relative_to(Path(__file__).parent)) if _img_abs else ""
+                except ValueError:
+                    _img_rel = str(_img_abs) if _img_abs else ""
                 _pin_info = {
                     "title":      _seo.title,
-                    "image_path": str(_imgs[0]) if _imgs else "",
+                    "image_path": _img_rel,
                     "niche":      item["combo"].get("niche"),
                     "tags":       getattr(_seo, "tags", []),
                 }
