@@ -1,0 +1,79 @@
+name: Daily Etsy Auto Generate
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 매일 UTC 00:00 (한국시간 09:00)
+  workflow_dispatch:       # 수동 실행 가능
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install anthropic google-generativeai requests pillow playwright python-dotenv
+
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
+      - name: Create .env file from secrets
+        run: |
+          cat <<EOF > .env
+          GEMINI_API_KEY_1=${{ secrets.GEMINI_API_KEY_1 }}
+          GEMINI_API_KEY_2=${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3=${{ secrets.GEMINI_API_KEY_3 }}
+          GEMINI_API_KEY_4=${{ secrets.GEMINI_API_KEY_4 }}
+          GEMINI_API_KEY_5=${{ secrets.GEMINI_API_KEY_5 }}
+          GEMINI_API_KEY_6=${{ secrets.GEMINI_API_KEY_6 }}
+          GEMINI_API_KEY_7=${{ secrets.GEMINI_API_KEY_7 }}
+          GEMINI_API_KEY_8=${{ secrets.GEMINI_API_KEY_8 }}
+          GEMINI_API_KEY_9=${{ secrets.GEMINI_API_KEY_9 }}
+          GEMINI_API_KEY_10=${{ secrets.GEMINI_API_KEY_10 }}
+          CLOUDFLARE_ACCOUNT_ID_1=${{ secrets.CLOUDFLARE_ACCOUNT_ID_1 }}
+          CLOUDFLARE_API_TOKEN_1=${{ secrets.CLOUDFLARE_API_TOKEN_1 }}
+          CLOUDFLARE_ACCOUNT_ID_2=${{ secrets.CLOUDFLARE_ACCOUNT_ID_2 }}
+          CLOUDFLARE_API_TOKEN_2=${{ secrets.CLOUDFLARE_API_TOKEN_2 }}
+          CLOUDFLARE_ACCOUNT_ID_3=${{ secrets.CLOUDFLARE_ACCOUNT_ID_3 }}
+          CLOUDFLARE_API_TOKEN_3=${{ secrets.CLOUDFLARE_API_TOKEN_3 }}
+          CLOUDFLARE_ACCOUNT_ID_4=${{ secrets.CLOUDFLARE_ACCOUNT_ID_4 }}
+          CLOUDFLARE_API_TOKEN_4=${{ secrets.CLOUDFLARE_API_TOKEN_4 }}
+          CLOUDFLARE_ACCOUNT_ID_5=${{ secrets.CLOUDFLARE_ACCOUNT_ID_5 }}
+          CLOUDFLARE_API_TOKEN_5=${{ secrets.CLOUDFLARE_API_TOKEN_5 }}
+          CLOUDFLARE_ACCOUNT_ID_6=${{ secrets.CLOUDFLARE_ACCOUNT_ID_6 }}
+          CLOUDFLARE_API_TOKEN_6=${{ secrets.CLOUDFLARE_API_TOKEN_6 }}
+          CLOUDFLARE_ACCOUNT_ID_7=${{ secrets.CLOUDFLARE_ACCOUNT_ID_7 }}
+          CLOUDFLARE_API_TOKEN_7=${{ secrets.CLOUDFLARE_API_TOKEN_7 }}
+          CLOUDFLARE_ACCOUNT_ID_8=${{ secrets.CLOUDFLARE_ACCOUNT_ID_8 }}
+          CLOUDFLARE_API_TOKEN_8=${{ secrets.CLOUDFLARE_API_TOKEN_8 }}
+          CLOUDFLARE_ACCOUNT_ID_9=${{ secrets.CLOUDFLARE_ACCOUNT_ID_9 }}
+          CLOUDFLARE_API_TOKEN_9=${{ secrets.CLOUDFLARE_API_TOKEN_9 }}
+          CLOUDFLARE_ACCOUNT_ID_10=${{ secrets.CLOUDFLARE_ACCOUNT_ID_10 }}
+          CLOUDFLARE_API_TOKEN_10=${{ secrets.CLOUDFLARE_API_TOKEN_10 }}
+          TOGETHER_API_KEY=${{ secrets.TOGETHER_API_KEY }}
+          ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+          DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }}
+          ETSY_API_KEY=${{ secrets.ETSY_API_KEY }}
+          ETSY_API_SECRET=${{ secrets.ETSY_API_SECRET }}
+          ETSY_ACCESS_TOKEN=${{ secrets.ETSY_ACCESS_TOKEN }}
+          ETSY_REFRESH_TOKEN=${{ secrets.ETSY_REFRESH_TOKEN }}
+          ETSY_SHOP_ID=${{ secrets.ETSY_SHOP_ID }}
+          GUMROAD_ACCESS_TOKEN=${{ secrets.GUMROAD_ACCESS_TOKEN }}
+          MAX_PRODUCTS_PER_RUN=4
+          TEST_MODE=false
+          EOF
+
+      - name: Run daily generate
+        run: python daily_generate.py
