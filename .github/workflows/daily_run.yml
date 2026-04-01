@@ -2,7 +2,8 @@ name: Daily Etsy Auto Generate
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 매일 UTC 00:00 (한국시간 09:00)
+    - cron: '0 0 * * *'   # 매일 UTC 00:00 (한국시간 09:00) — 상품 생성
+    - cron: '0 * * * *'   # 매시간 — 주문 알림 체크
   workflow_dispatch:       # 수동 실행 가능
 
 jobs:
@@ -75,5 +76,9 @@ jobs:
           TEST_MODE=false
           EOF
 
-      - name: Run daily generate
+      - name: Check new orders (every hour)
+        run: python -m monitor.order_alert
+
+      - name: Run daily generate (only at 09:00 KST)
+        if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
         run: python daily_generate.py
