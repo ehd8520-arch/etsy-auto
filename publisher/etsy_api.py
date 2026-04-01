@@ -240,8 +240,27 @@ def _save_tokens(access: str, refresh: str) -> None:
         except Exception:
             pass
 
+    # 토큰 갱신 시각 저장 (만료 알림용 — 90일 후 만료)
+    _save_token_meta()
+
     # GitHub Actions 환경이면 Secrets도 업데이트
     _update_github_secrets(access, refresh)
+
+
+def _save_token_meta() -> None:
+    """리프레시 토큰 갱신 시각을 db/token_meta.json에 저장."""
+    meta_path = Path(__file__).parent.parent / "db" / "token_meta.json"
+    try:
+        meta_path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = meta_path.with_suffix(".tmp")
+        tmp.write_text(
+            json.dumps({"refresh_token_updated_at": datetime.now().isoformat()},
+                       ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        tmp.replace(meta_path)
+    except Exception as e:
+        logger.warning("token_meta 저장 실패: %s", e)
 
 
 def _update_github_secrets(access: str, refresh: str) -> None:

@@ -95,6 +95,10 @@ jobs:
           [ -f db/order_alert_state.json ] || echo '{"seen_receipt_ids":[]}' > db/order_alert_state.json
           [ -f db/pinterest_pins.json ]    || echo '{"pins":{},"daily":{}}' > db/pinterest_pins.json
 
+      - name: Check token & session expiry (daily warning)
+        if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
+        run: python -m monitor.expiry_check
+
       - name: Check new orders (every hour)
         run: python -m monitor.order_alert
 
@@ -134,8 +138,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # 민감 파일 제외하고 상태 파일만 추가
           git add daily_progress.json publish_queue.json 2>/dev/null || true
-          git add db/order_alert_state.json db/pinterest_pins.json 2>/dev/null || true
-          git add monitor/__init__.py 2>/dev/null || true
+          git add db/order_alert_state.json db/pinterest_pins.json db/token_meta.json 2>/dev/null || true
+          git add monitor/__init__.py monitor/expiry_check.py 2>/dev/null || true
           # 변경사항 있을 때만 커밋
           git diff --staged --quiet || git commit -m "chore: auto-save state [skip ci]"
           git push origin HEAD 2>/dev/null || true
