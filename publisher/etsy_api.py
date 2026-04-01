@@ -602,6 +602,34 @@ def delete_listing(shop_id: str, listing_id: str) -> bool:
     return result is not None
 
 
+def update_shop_sale_message(shop_id: str, message: str) -> bool:
+    """디지털 상품 구매 감사 메시지 업데이트 (shops_w 스코프 필요).
+    구매 완료 직후 모든 구매자에게 자동 발송되는 메시지.
+    """
+    result = _api_request(
+        "PUT",
+        f"/application/shops/{shop_id}",
+        json={"digital_sale_message": message},
+    )
+    if result is not None:
+        logger.info("digital_sale_message 업데이트 완료 (shop=%s)", shop_id)
+        return True
+    logger.error("digital_sale_message 업데이트 실패 (shop=%s)", shop_id)
+    return False
+
+
+def get_shop_reviews_list(shop_id: str, limit: int = 50) -> list[dict]:
+    """샵 최근 리뷰 목록 반환. 각 항목: rating, review, listing_id, create_timestamp."""
+    result = _api_request(
+        "GET",
+        f"/application/shops/{shop_id}/reviews",
+        params={"limit": limit},
+    )
+    if not result:
+        return []
+    return result.get("results", [])
+
+
 # ── Full Publish Pipeline ──
 
 def publish_product(product: Product, seo: SEOData, shop_id: str) -> Optional[Listing]:

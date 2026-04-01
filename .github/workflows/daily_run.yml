@@ -106,6 +106,9 @@ jobs:
       - name: Check new orders (every hour)
         run: python -m monitor.order_alert
 
+      - name: Monitor new reviews (every hour)
+        run: python -m monitor.review_monitor
+
       - name: Activate queued listings (every hour)
         run: python activate_queue.py
 
@@ -131,8 +134,10 @@ jobs:
           if [ "$DAY" = "01" ]; then
             echo "매월 1일 — stale pruner 실행"
             python stale_listing_pruner.py
+            echo "매월 1일 — 구매 감사 메시지 교체"
+            python -m monitor.sale_message_updater
           else
-            echo "1일 아닌 날 — pruner 스킵 (오늘은 $DAY일)"
+            echo "1일 아닌 날 — pruner/메시지 스킵 (오늘은 $DAY일)"
           fi
 
       - name: Save state files back to repo
@@ -143,6 +148,7 @@ jobs:
           # 민감 파일 제외하고 상태 파일만 추가
           git add daily_progress.json publish_queue.json 2>/dev/null || true
           git add db/order_alert_state.json db/pinterest_pins.json db/token_meta.json 2>/dev/null || true
+          git add db/review_history.json db/sale_message_state.json 2>/dev/null || true
           git add monitor/__init__.py monitor/expiry_check.py 2>/dev/null || true
           # 변경사항 있을 때만 커밋
           git diff --staged --quiet || git commit -m "chore: auto-save state [skip ci]"
