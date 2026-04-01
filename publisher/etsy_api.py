@@ -238,6 +238,31 @@ def _save_tokens(access: str, refresh: str) -> None:
         except Exception:
             pass
 
+    # GitHub Actions 환경이면 Secrets도 업데이트
+    _update_github_secrets(access, refresh)
+
+
+def _update_github_secrets(access: str, refresh: str) -> None:
+    """GitHub Actions 환경에서 갱신된 토큰을 Secrets에 업데이트."""
+    import subprocess
+    if not os.getenv("GITHUB_ACTIONS"):
+        return
+    repo = os.getenv("GITHUB_REPOSITORY", "")
+    if not repo:
+        return
+    for name, value in [("ETSY_ACCESS_TOKEN", access), ("ETSY_REFRESH_TOKEN", refresh)]:
+        try:
+            result = subprocess.run(
+                ["gh", "secret", "set", name, "--body", value, "--repo", repo],
+                capture_output=True, text=True, timeout=30
+            )
+            if result.returncode == 0:
+                logger.info("GitHub Secret 업데이트 완료: %s", name)
+            else:
+                logger.warning("GitHub Secret 업데이트 실패: %s — %s", name, result.stderr[:100])
+        except Exception as e:
+            logger.warning("GitHub Secret 업데이트 예외: %s", e)
+
 
 # ── Shop Section System ──
 
