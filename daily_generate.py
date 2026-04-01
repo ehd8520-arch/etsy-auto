@@ -272,9 +272,13 @@ def get_next_combos(count: int) -> list[dict]:
     """
     progress = _load_progress()
     published_keys = set(progress.get("published", []))
+    # listing_ids에 있는 조합 = Etsy에 드래프트 업로드 완료 → published 미기록이어도 재생성 금지
+    drafted_keys = set(progress.get("listing_ids", {}).keys())
 
     # ── v1 미완료 조합 우선 ──
-    remaining = [c for c in ALL_COMBINATIONS if _combo_key(c) not in published_keys]
+    remaining = [c for c in ALL_COMBINATIONS
+                 if _combo_key(c) not in published_keys
+                 and _combo_key(c) not in drafted_keys]
 
     if remaining:
         # 시즌 부스트: 아직 안 만든 시즌 조합을 앞으로 당김

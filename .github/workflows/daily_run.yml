@@ -6,6 +6,10 @@ on:
     - cron: '0 * * * *'   # 매시간 — 주문 알림 + 큐 활성화
   workflow_dispatch:       # 수동 실행 가능
 
+concurrency:
+  group: etsy-auto
+  cancel-in-progress: false  # 실행 중이면 새 실행은 완료까지 대기 (취소 X)
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -142,4 +146,5 @@ jobs:
           git add monitor/__init__.py monitor/expiry_check.py 2>/dev/null || true
           # 변경사항 있을 때만 커밋
           git diff --staged --quiet || git commit -m "chore: auto-save state [skip ci]"
+          git pull --rebase origin HEAD 2>/dev/null || true
           git push origin HEAD 2>/dev/null || true

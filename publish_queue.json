@@ -25,14 +25,14 @@
         "pastel pink planner"
       ]
     },
-    "activated_at": "2026-04-01T23:05:20"
+    "activated_at": "2026-04-01T22:58:01"
   },
   {
     "listing_id": "4481232352",
     "shop_id": "65243737",
     "publish_at": "2026-04-02T01:47:00",
     "label": "daily×sage_green",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Sobriety Mom Planner Printable for moms in recovery balancing sobriety milestones and family life with a clean wellness focus PDF",
       "image_path": "C:\\Users\\동욱\\Downloads\\etsy_auto\\output\\planner\\4f097e1c\\mockups\\01_hero.jpg",
@@ -52,14 +52,15 @@
         "mothers day gift",
         "sage green planner"
       ]
-    }
+    },
+    "activated_at": "2026-04-02T01:58:02"
   },
   {
     "listing_id": "4481226431",
     "shop_id": "65243737",
     "publish_at": "2026-04-02T04:47:00",
     "label": "daily×pastel_pink",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Sobriety Mom Planner Printable for moms in recovery balancing family life with gentle guidance and support PDF",
       "image_path": "C:\\Users\\동욱\\Downloads\\etsy_auto\\output\\planner\\b8a92e13\\mockups\\01_hero.jpg",
@@ -79,6 +80,7 @@
         "mothers day gift",
         "pastel pink planner"
       ]
-    }
+    },
+    "activated_at": "2026-04-02T04:58:02"
   }
 ]
