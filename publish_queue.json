@@ -4,7 +4,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-01T22:47:00",
     "label": "daily×pastel_pink",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Mom Planner Printable for Busy Moms Juggling Family and Kids, Empowering a Soft Organized Life PDF",
       "image_path": "C:\\Users\\동욱\\Downloads\\etsy_auto\\output\\planner\\20459a11\\mockups\\01_hero.jpg",
@@ -24,7 +24,8 @@
         "mothers day gift",
         "pastel pink planner"
       ]
-    }
+    },
+    "activated_at": "2026-04-01T23:05:20"
   },
   {
     "listing_id": "4481232352",
