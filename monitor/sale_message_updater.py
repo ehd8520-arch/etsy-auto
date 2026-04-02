@@ -101,17 +101,38 @@ def _generate_one_message(tone: str) -> dict | None:
     """Groq로 감사 메시지 1개 생성. 자가채점 포함."""
     from config.settings import get_next_groq_key, mark_groq_key_exhausted, GROQ_BASE_URL, GROQ_MODEL
 
-    prompt = f"""You are a small Etsy shop owner who just made a sale. Write a short thank-you message for a digital planner buyer.
+    # Few-shot 예시: 실제 Etsy 상위 셀러들의 실제 문체
+    examples = {
+        "casual": (
+            "Hey! Your planner is ready to download — hope it makes your days a little easier 🙂 "
+            "If you end up loving it, a quick honest review means the world to a small shop like mine. Either way, enjoy!"
+        ),
+        "warm": (
+            "Thank you so much for your purchase — it genuinely means a lot to me! "
+            "Your file is all set to download whenever you're ready. "
+            "If the planner brings you even a little more calm or clarity, I'd love to hear about it in a review ☀️"
+        ),
+        "professional": (
+            "Thank you for your order! Your digital planner is available for download now. "
+            "I put a lot of care into designing each page, and your honest feedback in a review "
+            "helps me keep improving. Hope it serves you well!"
+        ),
+    }
 
-{_TONE_PROMPTS.get(tone, "")}
+    prompt = f"""You are a solo Etsy seller who handcrafts digital planners. A customer just bought one of your planners.
+Write the automatic purchase thank-you message they will receive.
 
-Rules:
-- English only
-- 80~150 characters total (SHORT — Etsy displays only the first ~160 chars)
-- Sound like a real human, NOT a bot or template
-- Ask for an honest review naturally (NO mention of "5 stars" or specific ratings)
-- Mention they can download their file now
-- No emojis overload (max 1-2)
+Tone: {tone} — example of this tone:
+"{examples.get(tone, '')}"
+
+Write a NEW message in the same tone. Do NOT copy the example — write something fresh but equally natural.
+
+Hard rules:
+- English only, 2-3 sentences
+- Must feel like a SPECIFIC human wrote it, not a form letter
+- Reference downloading the file + a gentle honest-review ask
+- NO "5-star", NO "please rate us", NO "click here"
+- Max 1 emoji
 
 Respond ONLY with this JSON (no markdown):
 {{
@@ -121,7 +142,7 @@ Respond ONLY with this JSON (no markdown):
     "warmth": 0-10,
     "review_nudge": 0-10
   }},
-  "score_reason": "one sentence why"
+  "score_reason": "one sentence why — would a real buyer feel this was written by a person?"
 }}"""
 
     for attempt in range(MAX_RETRIES):

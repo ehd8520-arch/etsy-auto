@@ -98,11 +98,35 @@ def _parse_json(raw: str) -> dict | None:
 # ── 별점별 답글 프롬프트 ───────────────────────────────────────────────────────
 
 _REPLY_TONE = {
-    5: "enthusiastic and grateful. Mention you're so glad they love it. Optionally hint at other planners in the shop.",
-    4: "warm and thankful. Appreciate their kind words. Ask what could make it even better next time.",
-    3: "sincere and appreciative. Thank them genuinely. Express your commitment to improving.",
-    2: "empathetic and apologetic. Acknowledge the issue. Offer to help resolve it.",
-    1: "very empathetic and apologetic. Sincerely apologize. Offer a refund or replacement if applicable.",
+    5: "enthusiastic and personal. Pick out ONE specific thing they mentioned and respond to it directly. Feel free to share a tiny moment of joy.",
+    4: "warm and genuine. Acknowledge something specific they said. Keep it real — don't over-thank.",
+    3: "sincere and grounded. Don't be defensive. Thank them honestly and show you heard them.",
+    2: "empathetic and calm. Acknowledge the frustration without being defensive. Offer a concrete next step.",
+    1: "deeply empathetic and solution-focused. Apologize sincerely. Offer a specific remedy — refund, replacement, or direct help.",
+}
+
+# Few-shot 예시: 별점별 실제 자연스러운 답글
+_REPLY_EXAMPLES = {
+    5: {
+        "review": "Love this planner! The habit tracker is exactly what I needed.",
+        "reply":  "The habit tracker is honestly my favorite section too — so glad it clicked for you! Enjoy every week 🌿",
+    },
+    4: {
+        "review": "Really nice design, just wish it had more space for notes.",
+        "reply":  "Thank you — and that's really helpful to know about the notes section. I'll look into expanding it in the next version!",
+    },
+    3: {
+        "review": "It's fine but not quite what I expected.",
+        "reply":  "I appreciate you being honest — that helps me more than you know. If you want to tell me more about what you were hoping for, I'm all ears.",
+    },
+    2: {
+        "review": "The file wouldn't open properly on my iPad.",
+        "reply":  "Oh no, I'm sorry about that! Please message me directly — I'll send you a version that works, or refund you, whichever you prefer.",
+    },
+    1: {
+        "review": "Terrible, nothing like the pictures.",
+        "reply":  "I'm really sorry this wasn't what you expected. Please reach out to me and I'll make it right — a refund or a different product, your choice.",
+    },
 }
 
 
@@ -111,20 +135,27 @@ def _generate_reply_draft(review_text: str, rating: int, listing_title: str) -> 
     from config.settings import get_next_groq_key, mark_groq_key_exhausted, GROQ_BASE_URL, GROQ_MODEL
 
     tone = _REPLY_TONE.get(rating, _REPLY_TONE[3])
-    prompt = f"""You are a small Etsy shop owner replying to a customer review.
+    ex   = _REPLY_EXAMPLES.get(rating, _REPLY_EXAMPLES[3])
 
-Product: {listing_title[:80]}
-Star rating: {rating}/5
-Customer review: "{review_text[:300]}"
+    prompt = f"""You are a solo Etsy seller replying to a customer review. You care deeply about your buyers.
 
-Write a short, genuine reply. Be {tone}
+Product sold: {listing_title[:80] or "Digital Planner"}
+Customer left this review: "{review_text[:300]}"
 
-Rules:
-- English only
-- 1-3 sentences, max 200 characters
-- Sound like a REAL human seller, NOT a template or bot
-- Do NOT copy the review verbatim back
+How to reply: {tone}
+
+Here is an example of the style you should match (different product, same energy):
+Customer said: "{ex['review']}"
+Good reply: "{ex['reply']}"
+
+Now write a reply to the ACTUAL review above. Do NOT copy the example.
+
+Critical rules:
+- English only, 1-3 sentences
+- Pick out at least ONE specific detail from their review and react to it — this is what makes it feel human
+- Do NOT start with "Thank you for your review" or "I'm glad you enjoyed" — too generic
 - Do NOT mention star ratings or numbers
+- Write like you're texting a friend who just told you something — genuine, not formal
 
 Respond ONLY with this JSON (no markdown):
 {{
