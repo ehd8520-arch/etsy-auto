@@ -713,14 +713,13 @@ def main():
         print_status()
         return
 
-    # ── 오늘 이미 생성했는지 확인 (workflow_dispatch 중복 실행 방지) ──
+    # ── 큐 미발행 항목 수 확인 (이미 충분히 쌓여있으면 생성 스킵) ──
     if args.publish and not args.force:
-        _prog = _load_progress()
-        _today = datetime.utcnow().strftime("%Y-%m-%d")
-        if _prog.get("last_run_date") == _today:
+        _pending = [e for e in _load_queue() if not e.get("done")]
+        if len(_pending) >= count:
             logger.warning(
-                "⚠️ 오늘(%s) 이미 생성 완료됨 — 중복 실행 차단. "
-                "강제 재실행하려면 --force 플래그 사용.", _today
+                "⚠️ 미발행 큐 %d개 — 이미 충분함 (기준: %d개). 생성 스킵. "
+                "강제 실행하려면 --force 플래그 사용.", len(_pending), count
             )
             _release_lock()
             return
@@ -897,11 +896,6 @@ def main():
     if _v2_combos:
         mark_published(_v2_combos, listing_ids=_listing_ids_map, combo_product_ids=_combo_product_ids, version=2)
 
-    # ── 오늘 실행 날짜 기록 (중복 실행 방지용) ──
-    if args.publish and successful_combos:
-        _prog = _load_progress()
-        _prog["last_run_date"] = datetime.utcnow().strftime("%Y-%m-%d")
-        _save_progress(_prog)
 
     # ── 발행 스케줄 요약 ──
     logger.info("")
