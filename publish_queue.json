@@ -172,7 +172,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-02T23:00:00",
     "label": "daily×pastel_pink",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Daily Planner Pdf for Busy Moms, Beautifully Designed with a Soft Touch for a More Mindful Day PDF",
       "image_path": "output/planner/c5fd294b/mockups/01_hero.jpg",
@@ -192,7 +192,8 @@
         "mothers day gift",
         "pastel pink planner"
       ]
-    }
+    },
+    "activated_at": "2026-04-02T23:06:34"
   },
   {
     "listing_id": "4481639393",
