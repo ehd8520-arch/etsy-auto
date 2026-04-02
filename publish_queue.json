@@ -88,7 +88,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-02T14:00:00",
     "label": "daily×pastel_pink",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Pregnancy Planner Printable, Goodnotes Undated Life Organizer Bundle, Instant Download PDF",
       "image_path": "output/planner/a63f3307/mockups/01_hero.jpg",
@@ -108,7 +108,8 @@
         "mom life planner",
         "mothers day gift"
       ]
-    }
+    },
+    "activated_at": "2026-04-02T15:01:28"
   },
   {
     "listing_id": "4481624833",
