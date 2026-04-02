@@ -92,6 +92,18 @@ jobs:
           mkdir -p db
           echo '${{ secrets.PINTEREST_SESSION }}' > db/pinterest_session.json
 
+      - name: Restore Etsy tokens from token_state.json (if newer than secrets)
+        run: |
+          if [ -f db/token_state.json ]; then
+            ACCESS=$(python3 -c "import json; d=json.load(open('db/token_state.json')); print(d.get('ETSY_ACCESS_TOKEN',''))" 2>/dev/null)
+            REFRESH=$(python3 -c "import json; d=json.load(open('db/token_state.json')); print(d.get('ETSY_REFRESH_TOKEN',''))" 2>/dev/null)
+            if [ -n "$ACCESS" ] && [ -n "$REFRESH" ]; then
+              sed -i "s|^ETSY_ACCESS_TOKEN=.*|ETSY_ACCESS_TOKEN=$ACCESS|" .env
+              sed -i "s|^ETSY_REFRESH_TOKEN=.*|ETSY_REFRESH_TOKEN=$REFRESH|" .env
+              echo "토큰 복원 완료 (token_state.json → .env)"
+            fi
+          fi
+
       - name: Restore state files (order alert + pinterest pins)
         run: |
           mkdir -p db
@@ -147,7 +159,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # 민감 파일 제외하고 상태 파일만 추가
           git add daily_progress.json publish_queue.json 2>/dev/null || true
-          git add db/order_alert_state.json db/pinterest_pins.json db/token_meta.json 2>/dev/null || true
+          git add db/order_alert_state.json db/pinterest_pins.json db/token_meta.json db/token_state.json 2>/dev/null || true
           git add db/review_history.json db/sale_message_state.json 2>/dev/null || true
           git add monitor/__init__.py monitor/expiry_check.py 2>/dev/null || true
           # 변경사항 있을 때만 커밋

@@ -16,6 +16,9 @@ db/*
 !db/order_alert_state.json
 !db/pinterest_pins.json
 !db/token_meta.json
+!db/token_state.json
+!db/review_history.json
+!db/sale_message_state.json
 
 # backups/ — 민감정보 없지만 대용량 방지
 backups/

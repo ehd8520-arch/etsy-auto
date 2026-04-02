@@ -247,6 +247,28 @@ def _save_tokens(access: str, refresh: str) -> None:
     _update_github_secrets(access, refresh)
 
 
+def _save_token_state(access: str, refresh: str) -> None:
+    """갱신된 토큰을 db/token_state.json에 저장 (GH_PAT 없을 때 대안 경로).
+    워크플로우 시작 시 이 파일을 읽어 .env에 주입하면 토큰이 런 간 유지됨.
+    """
+    state_path = Path(__file__).parent.parent / "db" / "token_state.json"
+    try:
+        state_path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = state_path.with_suffix(".tmp")
+        tmp.write_text(
+            json.dumps({
+                "ETSY_ACCESS_TOKEN": access,
+                "ETSY_REFRESH_TOKEN": refresh,
+                "updated_at": datetime.now().isoformat(),
+            }, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        tmp.replace(state_path)
+        logger.info("토큰 상태 저장 완료: db/token_state.json")
+    except Exception as e:
+        logger.warning("토큰 상태 저장 실패: %s", e)
+
+
 def _save_token_meta() -> None:
     """리프레시 토큰 갱신 시각을 db/token_meta.json에 저장."""
     meta_path = Path(__file__).parent.parent / "db" / "token_meta.json"
@@ -264,18 +286,30 @@ def _save_token_meta() -> None:
 
 
 def _update_github_secrets(access: str, refresh: str) -> None:
-    """GitHub Actions 환경에서 갱신된 토큰을 Secrets에 업데이트."""
+    """GitHub Actions 환경에서 갱신된 토큰을 Secrets에 업데이트.
+
+    GITHUB_TOKEN은 secrets 쓰기 권한이 없으므로 GH_PAT 시크릿이 필요.
+    GH_PAT가 없으면 조용히 스킵 (db/token_state.json으로 대신 저장).
+    """
     import subprocess
     if not os.getenv("GITHUB_ACTIONS"):
         return
     repo = os.getenv("GITHUB_REPOSITORY", "")
     if not repo:
         return
+
+    # GH_PAT 없으면 token_state.json에 저장 후 리턴 (secrets 권한 불필요)
+    pat = os.getenv("GH_PAT", "")
+    if not pat:
+        _save_token_state(access, refresh)
+        return
+
     for name, value in [("ETSY_ACCESS_TOKEN", access), ("ETSY_REFRESH_TOKEN", refresh)]:
         try:
             result = subprocess.run(
                 ["gh", "secret", "set", name, "--body", value, "--repo", repo],
-                capture_output=True, text=True, timeout=30
+                capture_output=True, text=True, timeout=30,
+                env={**os.environ, "GH_TOKEN": pat},
             )
             if result.returncode == 0:
                 logger.info("GitHub Secret 업데이트 완료: %s", name)

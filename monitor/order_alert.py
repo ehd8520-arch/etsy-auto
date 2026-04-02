@@ -22,9 +22,7 @@ _BASE_DIR    = Path(__file__).resolve().parent.parent
 _STATE_FILE  = _BASE_DIR / "db" / "order_alert_state.json"
 _TG_TOKEN    = os.getenv("TELEGRAM_BOT_TOKEN", "")
 _TG_CHAT     = os.getenv("TELEGRAM_CHAT_ID", "")
-_ETSY_TOKEN  = os.getenv("ETSY_ACCESS_TOKEN", "")
 _SHOP_ID     = os.getenv("ETSY_SHOP_ID", "")
-_API_BASE    = "https://openapi.etsy.com/v3"
 
 
 # ── 상태 저장/로드 ────────────────────────────────────────────────────────────
@@ -57,44 +55,20 @@ def _save_state(state: dict) -> None:
 
 def _get_recent_receipts(limit: int = 25) -> list:
     """최근 주문(receipts) 목록 반환."""
-    if not _ETSY_TOKEN or not _SHOP_ID:
-        logger.error("ETSY_ACCESS_TOKEN 또는 ETSY_SHOP_ID 없음")
+    if not _SHOP_ID:
+        logger.error("ETSY_SHOP_ID 없음")
         return []
     try:
-        headers = {
-            "Authorization": f"Bearer {_ETSY_TOKEN}",
-            "x-api-key": os.getenv("ETSY_API_KEY", ""),
-        }
-        resp = requests.get(
-            f"{_API_BASE}/application/shops/{_SHOP_ID}/receipts",
-            headers=headers,
+        from publisher.etsy_api import _api_request
+        result = _api_request(
+            "GET",
+            f"/application/shops/{_SHOP_ID}/receipts",
             params={"limit": limit, "was_paid": "true"},
-            timeout=30,
         )
-        if resp.status_code == 401:
-            logger.warning("토큰 만료 — 자동 갱신 시도")
-            try:
-                from publisher.etsy_api import refresh_access_token
-                if refresh_access_token():
-                    # 갱신된 토큰으로 재시도
-                    import importlib, publisher.etsy_api as _ea
-                    new_token = _ea._access_token
-                    headers["Authorization"] = f"Bearer {new_token}"
-                    resp2 = requests.get(
-                        f"{_API_BASE}/application/shops/{_SHOP_ID}/receipts",
-                        headers=headers,
-                        params={"limit": limit, "was_paid": "true"},
-                        timeout=30,
-                    )
-                    if resp2.ok:
-                        return resp2.json().get("results", [])
-            except Exception as _re:
-                logger.error("토큰 갱신 실패: %s", _re)
+        if result is None:
+            logger.warning("주문 조회 실패")
             return []
-        if not resp.ok:
-            logger.warning("주문 조회 실패: %s %s", resp.status_code, resp.text[:200])
-            return []
-        return resp.json().get("results", [])
+        return result.get("results", [])
     except Exception as e:
         logger.error("주문 조회 예외: %s", e)
         return []
