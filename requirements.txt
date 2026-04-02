@@ -5,3 +5,4 @@ requests
 pillow
 playwright
 python-dotenv
+imageio[ffmpeg]
