@@ -844,7 +844,42 @@ def main():
                 if not args.no_pinterest:
                     _pin_to_pinterest(item, listing_id)
             else:
-                logger.error("❌ 즉시 발행 실패: %s", label)
+                # 즉시 활성화 실패 → 큐에 폴백 등록 (listing_id 보존, 재드래프트 방지)
+                # Why: 실패 시 그냥 로그만 남기면 listing_ids에 저장 안됨
+                #      → 다음 실행 때 재드래프트 → Etsy에 중복 드래프트 생성
+                logger.warning("⚠️ 즉시 발행 실패, 큐에 폴백 등록: %s (listing_id=%s)", label, listing_id)
+                if _queue_base_ts is None:
+                    _existing = _load_queue()
+                    _pending_times = [
+                        datetime.fromisoformat(e["publish_at"]).timestamp()
+                        for e in _existing if not e.get("done") and e.get("publish_at")
+                    ]
+                    if _pending_times:
+                        _queue_base_ts = max(_pending_times) + interval * 3600
+                    else:
+                        _queue_base_ts = _to_peak_utc(now_ts + interval * 3600)
+                _fallback_ts = _queue_base_ts
+                _queue_base_ts = _fallback_ts + interval * 3600  # 다음 항목 기준점 갱신
+                _fallback_at = datetime.utcfromtimestamp(_fallback_ts).strftime("%Y-%m-%dT%H:%M:%S")
+                _fallback_pin: dict | None = None
+                if not args.no_pinterest:
+                    _fprod = item["product"]
+                    _fseo  = item["seo"]
+                    _fimgs = getattr(_fprod, "mockup_paths", []) or []
+                    _fimg_abs = Path(_fimgs[0]) if _fimgs else None
+                    try:
+                        _fimg_rel = str(_fimg_abs.relative_to(Path(__file__).parent)) if _fimg_abs else ""
+                    except ValueError:
+                        _fimg_rel = str(_fimg_abs) if _fimg_abs else ""
+                    _fallback_pin = {
+                        "title":      _fseo.title,
+                        "image_path": _fimg_rel,
+                        "niche":      item["combo"].get("niche"),
+                        "tags":       getattr(_fseo, "tags", []),
+                    }
+                _append_queue(listing_id, shop_id, _fallback_at, label, pinterest_info=_fallback_pin)
+                successful_combos.append(item["combo"])
+                logger.info("📅 폴백 큐 등록: %s → %s 발행", label, _fallback_at)
         else:
             # 나머지: 큐에 예약 — 첫 예약 항목만 피크타임으로 스냅, 나머지는 거기서 interval씩 추가
             # Why: 각각 독립 스냅하면 전부 14:00이 되어 동시 발행 버그 발생
@@ -890,14 +925,14 @@ def main():
     # v2 여부 판단: 이미 v1 published에 있으면 v2
     _progress_snap = _load_progress()
     _v1_published  = set(_progress_snap.get("published", []))
-    # listing_ids_map은 successful_combos(활성화+큐 등록 성공)에 한정
-    # Why: drafted 전체로 만들면 idx=0 활성화 실패한 항목도 listing_ids에 저장되어
-    #      Etsy 드래프트 상태로 고아 발생 (published 배열엔 없고 listing_ids엔 있는 모순)
-    _successful_keys = {_combo_key(c) for c in successful_combos}
+    # listing_ids_map은 drafted 전체 (활성화 실패 포함)
+    # Why: idx=0 활성화 실패 시 큐 폴백으로 등록 → successful_combos에 포함됨
+    #      따라서 모든 drafted 항목은 반드시 successful_combos에도 있어야 함 → listing_ids 안전
+    #      단, 폴백 없이 실패 시에도 listing_ids에 저장해 재드래프트 방지 (Etsy 중복 드래프트 방지)
     _listing_ids_map = {
         _combo_key(item["combo"]): lid
         for item, lid in drafted
-        if lid and _combo_key(item["combo"]) in _successful_keys
+        if lid
     }
     _combo_product_ids = {
         _combo_key(item["combo"]): getattr(item["product"], "product_id", "")
