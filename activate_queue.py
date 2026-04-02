@@ -74,7 +74,7 @@ def print_queue():
         logger.info("큐가 비어 있습니다.")
         return
 
-    now = datetime.now()
+    now = datetime.utcnow()
     logger.info("")
     logger.info("=" * 60)
     logger.info("  발행 큐 현황 (%d개)", len(queue))
@@ -180,7 +180,7 @@ def run(dry: bool = False) -> int:
         logger.info("큐 비어 있음 — 처리할 항목 없음")
         return 0
 
-    now = datetime.now()
+    now = datetime.utcnow()
     pending = [
         e for e in queue
         if not e.get("done") and datetime.fromisoformat(e["publish_at"]) <= now

@@ -801,6 +801,10 @@ def main():
     now_ts = _time.time()
     successful_combos = []
 
+    # 첫 번째 예약 항목의 피크타임 기준점 계산 (나머지는 여기서 interval씩 추가)
+    # Why: 각 항목을 독립적으로 _to_peak_utc 처리하면 모두 14:00으로 스냅됨
+    _queue_base_ts: float | None = None
+
     for idx, (item, listing_id) in enumerate(drafted):
         label = f"{item['combo']['planner_type']}×{item['combo']['theme_name']}"
         if idx == 0:
@@ -814,11 +818,13 @@ def main():
             else:
                 logger.error("❌ 즉시 발행 실패: %s", label)
         else:
-            # 나머지: 큐에 예약 — US EST 피크타임(14~18 UTC) 조정 + ±20분 지터
-            # Why: 정확한 N시간 간격은 봇 패턴으로 감지될 수 있음 → 인간적 불규칙성 추가
+            # 나머지: 큐에 예약 — 첫 예약 항목만 피크타임으로 스냅, 나머지는 거기서 interval씩 추가
+            # Why: 각각 독립 스냅하면 전부 14:00이 되어 동시 발행 버그 발생
+            if _queue_base_ts is None:
+                _queue_base_ts = _to_peak_utc(now_ts + interval * 3600)
             jitter_sec = random.randint(-20 * 60, 20 * 60)
-            publish_ts = _to_peak_utc(now_ts + idx * interval * 3600 + jitter_sec)
-            publish_at = datetime.fromtimestamp(publish_ts).strftime("%Y-%m-%dT%H:%M:%S")
+            publish_ts = _queue_base_ts + (idx - 1) * interval * 3600 + jitter_sec
+            publish_at = datetime.utcfromtimestamp(publish_ts).strftime("%Y-%m-%dT%H:%M:%S")
             # Pinterest 정보를 큐에 저장 → activate_queue.py가 활성화 후 핀 발행
             _pin_info: dict | None = None
             if not args.no_pinterest:
