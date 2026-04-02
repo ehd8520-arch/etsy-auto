@@ -674,6 +674,7 @@ def main():
     parser.add_argument("--reset",    action="store_true",     help="진행 상태 초기화")
     parser.add_argument("--preview",       action="store_true", help="최근 미리보기 HTML 브라우저로 오픈")
     parser.add_argument("--no-pinterest",  action="store_true", help="Pinterest 핀 발행 건너뜀")
+    parser.add_argument("--force",         action="store_true", help="오늘 이미 생성했어도 강제 재실행")
     args = parser.parse_args()
 
     if args.preview:
@@ -712,6 +713,17 @@ def main():
         print_status()
         return
 
+    # ── 오늘 이미 생성했는지 확인 (workflow_dispatch 중복 실행 방지) ──
+    if args.publish and not args.force:
+        _prog = _load_progress()
+        _today = datetime.utcnow().strftime("%Y-%m-%d")
+        if _prog.get("last_run_date") == _today:
+            logger.warning(
+                "⚠️ 오늘(%s) 이미 생성 완료됨 — 중복 실행 차단. "
+                "강제 재실행하려면 --force 플래그 사용.", _today
+            )
+            _release_lock()
+            return
     if args.mock:
         os.environ["WALL_ART_MOCK"] = "true"
         logger.info("*** MOCK 모드 — 이미지 API 없음, 비용 $0 ***")
@@ -828,7 +840,17 @@ def main():
             # 나머지: 큐에 예약 — 첫 예약 항목만 피크타임으로 스냅, 나머지는 거기서 interval씩 추가
             # Why: 각각 독립 스냅하면 전부 14:00이 되어 동시 발행 버그 발생
             if _queue_base_ts is None:
-                _queue_base_ts = _to_peak_utc(now_ts + interval * 3600)
+                # 기존 큐의 마지막 예약 시간 이후로 계산
+                # Why: 당일 2회 이상 실행 시 각자 fresh 계산하면 14:00 근처 중복 발생
+                _existing = _load_queue()
+                _pending_times = [
+                    datetime.fromisoformat(e["publish_at"]).timestamp()
+                    for e in _existing if not e.get("done") and e.get("publish_at")
+                ]
+                if _pending_times:
+                    _queue_base_ts = max(_pending_times) + interval * 3600
+                else:
+                    _queue_base_ts = _to_peak_utc(now_ts + interval * 3600)
             jitter_sec = random.randint(-20 * 60, 20 * 60)
             publish_ts = _queue_base_ts + (idx - 1) * interval * 3600 + jitter_sec
             publish_at = datetime.utcfromtimestamp(publish_ts).strftime("%Y-%m-%dT%H:%M:%S")
@@ -874,6 +896,12 @@ def main():
         mark_published(_v1_combos, listing_ids=_listing_ids_map, combo_product_ids=_combo_product_ids, version=1)
     if _v2_combos:
         mark_published(_v2_combos, listing_ids=_listing_ids_map, combo_product_ids=_combo_product_ids, version=2)
+
+    # ── 오늘 실행 날짜 기록 (중복 실행 방지용) ──
+    if args.publish and successful_combos:
+        _prog = _load_progress()
+        _prog["last_run_date"] = datetime.utcnow().strftime("%Y-%m-%d")
+        _save_progress(_prog)
 
     # ── 발행 스케줄 요약 ──
     logger.info("")
