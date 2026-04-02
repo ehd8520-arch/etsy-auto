@@ -10,7 +10,11 @@
     "daily_sage_green_generic",
     "daily_pastel_pink_generic",
     "daily_sage_green_nurse",
-    "daily_pastel_pink_nurse"
+    "daily_pastel_pink_nurse",
+    "daily_sage_green_ADHD_nurse",
+    "daily_pastel_pink_ADHD_nurse",
+    "daily_sage_green_ADHD",
+    "daily_sage_green_anxiety"
   ],
   "v2_published": [],
   "pruned_combos": [],
@@ -26,7 +30,11 @@
     "daily_sage_green_generic": "4481638515",
     "daily_pastel_pink_generic": "4481638957",
     "daily_sage_green_nurse": "4481639393",
-    "daily_pastel_pink_nurse": "4481639785"
+    "daily_pastel_pink_nurse": "4481639785",
+    "daily_sage_green_ADHD_nurse": "4481667102",
+    "daily_pastel_pink_ADHD_nurse": "4481660419",
+    "daily_sage_green_ADHD": "4481660795",
+    "daily_sage_green_anxiety": "4481661243"
   },
   "combo_ids": {
     "daily_sage_green_mom": "a929609b",
@@ -40,6 +48,10 @@
     "daily_sage_green_generic": "89a05011",
     "daily_pastel_pink_generic": "c5fd294b",
     "daily_sage_green_nurse": "6edd1510",
-    "daily_pastel_pink_nurse": "54928cd7"
+    "daily_pastel_pink_nurse": "54928cd7",
+    "daily_sage_green_ADHD_nurse": "36f1cd4d",
+    "daily_pastel_pink_ADHD_nurse": "ad7d59ec",
+    "daily_sage_green_ADHD": "c94550a9",
+    "daily_sage_green_anxiety": "d108977c"
   }
 }
