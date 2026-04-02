@@ -82,7 +82,20 @@ jobs:
           GUMROAD_ACCESS_TOKEN=${{ secrets.GUMROAD_ACCESS_TOKEN }}
           MAX_PRODUCTS_PER_RUN=4
           TEST_MODE=false
+          GROQ_API_KEY_1=${{ secrets.GROQ_API_KEY_1 }}
+          GROQ_API_KEY_2=${{ secrets.GROQ_API_KEY_2 }}
+          GROQ_API_KEY_3=${{ secrets.GROQ_API_KEY_3 }}
+          GROQ_API_KEY_4=${{ secrets.GROQ_API_KEY_4 }}
+          GROQ_API_KEY_5=${{ secrets.GROQ_API_KEY_5 }}
+          GROQ_API_KEY_6=${{ secrets.GROQ_API_KEY_6 }}
+          GROQ_API_KEY_7=${{ secrets.GROQ_API_KEY_7 }}
+          GROQ_API_KEY_8=${{ secrets.GROQ_API_KEY_8 }}
+          GROQ_API_KEY_9=${{ secrets.GROQ_API_KEY_9 }}
+          GROQ_API_KEY_10=${{ secrets.GROQ_API_KEY_10 }}
           EOF
+          # config/.env도 동일하게 생성 (settings.py가 config/.env 우선 로드)
+          mkdir -p config
+          cp .env config/.env
 
       - name: Authenticate gh CLI for token updates
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
