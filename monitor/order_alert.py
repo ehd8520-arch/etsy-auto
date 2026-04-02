@@ -102,18 +102,24 @@ def _esc(text: str) -> str:
 def _format_order_message(receipt: dict) -> str:
     receipt_id  = receipt.get("receipt_id", "?")
     buyer       = _esc(receipt.get("name", "익명"))
+    country     = _esc(receipt.get("country_iso", ""))
     total       = receipt.get("grandtotal", {})
     amount      = total.get("amount", 0) / max(total.get("divisor", 100), 1)
     currency    = _esc(total.get("currency_code", "USD"))
     items       = receipt.get("transactions", [])
-    item_titles = "\n".join(f"  • {_esc(t.get('title', '?'))}" for t in items[:5])
+    item_count  = len(items)
+    item_titles = "\n".join(f"  • {_esc(t.get('title', '?')[:60])}" for t in items[:5])
+    order_url   = f"https://www.etsy.com/your/orders/{receipt_id}"
+    flag        = f" 🌍 {country}" if country else ""
 
     return (
-        f"🛍 <b>새 주문!</b>\n"
-        f"주문번호: #{receipt_id}\n"
-        f"구매자: {buyer}\n"
-        f"금액: {amount:.2f} {currency}\n"
-        f"상품:\n{item_titles}"
+        f"🛍 <b>새 주문 들어왔어요!</b>{flag}\n"
+        f"━━━━━━━━━━━━━━━━\n"
+        f"💰 <b>${amount:.2f} {currency}</b>  ({item_count}개 상품)\n"
+        f"👤 구매자: {buyer}\n"
+        f"📦 상품:\n{item_titles}\n"
+        f"━━━━━━━━━━━━━━━━\n"
+        f"🔗 <a href='{order_url}'>주문 확인하기 #{receipt_id}</a>"
     )
 
 

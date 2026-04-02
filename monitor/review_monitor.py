@@ -215,19 +215,31 @@ def _star_bar(rating: int) -> str:
     return "⭐" * rating + "☆" * (5 - rating)
 
 
-def _format_review_alert(review: dict) -> str:
+def _format_review_alert(review: dict, listing_title: str = "") -> str:
     rating       = review.get("rating", 0)
     review_text  = review.get("review", "(내용 없음)")
     listing_id   = review.get("listing_id", "")
     created_ts   = review.get("create_timestamp", 0)
     created_str  = datetime.fromtimestamp(created_ts).strftime("%m/%d %H:%M") if created_ts else "?"
+    listing_url  = f"https://www.etsy.com/listing/{listing_id}"
+    title_line   = f"\n📦 <b>{_esc(listing_title[:60])}</b>" if listing_title else ""
 
-    urgency = "🚨 <b>부정 리뷰 긴급!</b>" if rating <= 2 else "⭐ <b>새 리뷰</b>"
+    if rating <= 2:
+        header = f"🚨 <b>부정 리뷰 긴급 대응 필요!</b>"
+    elif rating == 3:
+        header = f"😐 <b>보통 리뷰</b>"
+    elif rating == 4:
+        header = f"😊 <b>좋은 리뷰</b>"
+    else:
+        header = f"🌟 <b>5점 만점 리뷰!</b>"
+
     return (
-        f"{urgency}\n"
-        f"{_star_bar(rating)} ({rating}/5) — {created_str}\n"
-        f"리뷰: {_esc(review_text[:200])}\n"
-        f"리스팅: https://www.etsy.com/listing/{listing_id}"
+        f"{header}{title_line}\n"
+        f"━━━━━━━━━━━━━━━━\n"
+        f"{_star_bar(rating)}  <b>{rating}/5</b>  · {created_str}\n\n"
+        f"💬 <i>{_esc(review_text[:300])}</i>\n"
+        f"━━━━━━━━━━━━━━━━\n"
+        f"🔗 <a href='{listing_url}'>리스팅 바로가기</a>"
     )
 
 
@@ -277,7 +289,7 @@ def check_new_reviews() -> int:
         logger.info("새 리뷰 감지: rating=%d, rid=%s", rating, rid)
 
         # ① 리뷰 알림 전송
-        alert_msg = _format_review_alert(review)
+        alert_msg = _format_review_alert(review, listing_title)
         _send_telegram(alert_msg)
         time.sleep(0.5)
 
@@ -285,8 +297,11 @@ def check_new_reviews() -> int:
         draft = _generate_reply_draft(review_text, rating, listing_title)
         if draft:
             _send_telegram(
-                f"📝 <b>답글 초안 (복붙해서 사용):</b>\n\n"
-                f"<i>{_esc(draft)}</i>"
+                f"📝 <b>답글 초안</b> — 복붙 후 바로 사용 가능\n"
+                f"━━━━━━━━━━━━━━━━\n"
+                f"<i>{_esc(draft)}</i>\n"
+                f"━━━━━━━━━━━━━━━━\n"
+                f"⚡ Etsy에서 직접 답글 달기: https://www.etsy.com/your/shops/me/reviews"
             )
             logger.info("  답글 초안 전송 완료")
         else:

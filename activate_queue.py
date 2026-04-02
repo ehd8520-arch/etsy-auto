@@ -159,8 +159,10 @@ def _pin_from_queue(entry: dict) -> None:
             logger.info("📌 Pinterest 중복 건너뜀: listing_id=%s", listing_id)
         else:
             logger.warning("📌 Pinterest 핀 상태=%s: listing_id=%s", status, listing_id)
+        return result
     except Exception as e:
         logger.warning("Pinterest 핀 실패 (건너뜀): %s", e)
+        return {"status": "error"}
     finally:
         if _tmp_dir:
             import shutil
@@ -168,6 +170,7 @@ def _pin_from_queue(entry: dict) -> None:
                 shutil.rmtree(_tmp_dir, ignore_errors=True)
             except Exception:
                 pass
+    return {"status": "error"}
 
 
 def run(dry: bool = False) -> int:
@@ -216,6 +219,10 @@ def run(dry: bool = False) -> int:
         listing_id = entry["listing_id"]
         shop_id    = entry["shop_id"]
         label      = entry.get("label", listing_id)
+        pin_info   = entry.get("pinterest_info", {})
+        title      = pin_info.get("title", label) if pin_info else label
+        niche      = pin_info.get("niche", "") if pin_info else ""
+        listing_url = f"https://www.etsy.com/listing/{listing_id}"
 
         try:
             ok = activate_listing(shop_id, listing_id)
@@ -224,11 +231,32 @@ def run(dry: bool = False) -> int:
                 entry["activated_at"] = now.strftime("%Y-%m-%dT%H:%M:%S")
                 activated += 1
                 logger.info("🚀 발행 완료: %s (listing_id=%s)", label, listing_id)
-                # Pinterest 핀 발행 (큐 항목에 pinterest_info가 있을 때)
+
+                # Pinterest 핀 발행
+                pin_status = "⏭ 스킵"
                 if entry.get("pinterest_info"):
-                    _pin_from_queue(entry)
+                    pin_result = _pin_from_queue(entry)
+                    if pin_result and pin_result.get("status") == "success":
+                        pin_status = "✅ 완료"
+                    elif pin_result and pin_result.get("status") == "duplicate":
+                        pin_status = "♻️ 중복"
+                    else:
+                        pin_status = "❌ 실패"
+
+                # 발행 완료 Telegram 알림 (상세)
+                _notify_telegram(
+                    f"🚀 <b>Etsy 상품 발행 완료!</b>\n"
+                    f"━━━━━━━━━━━━━━━━\n"
+                    f"📌 <b>{title[:70]}</b>\n"
+                    f"🏷 니치: {niche or '일반'}  |  🎨 {label}\n"
+                    f"📍 Pinterest 핀: {pin_status}\n"
+                    f"━━━━━━━━━━━━━━━━\n"
+                    f"🔗 <a href='{listing_url}'>리스팅 바로가기</a>",
+                    parse_mode="HTML"
+                )
             else:
                 logger.error("❌ 발행 실패: %s (listing_id=%s)", label, listing_id)
+                _notify_telegram(f"❌ <b>발행 실패</b>\n{label}\nlisting_id={listing_id}", parse_mode="HTML")
         except Exception as e:
             logger.error("❌ 예외: %s — %s", label, e)
 
@@ -246,14 +274,10 @@ def run(dry: bool = False) -> int:
     _save_queue(queue)
     logger.info("처리 완료: %d/%d개 발행", activated, len(pending))
 
-    # 발행 성공 시 Telegram 알림
-    if activated > 0:
-        _notify_telegram(f"🚀 Etsy 발행 완료 | {activated}개 활성화")
-
     return activated
 
 
-def _notify_telegram(message: str) -> None:
+def _notify_telegram(message: str, parse_mode: str = "HTML") -> None:
     tg_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
     tg_chat  = os.environ.get("TELEGRAM_CHAT_ID", "")
     if not tg_token or not tg_chat:
@@ -262,7 +286,8 @@ def _notify_telegram(message: str) -> None:
         import requests as _req
         _req.post(
             f"https://api.telegram.org/bot{tg_token}/sendMessage",
-            json={"chat_id": tg_chat, "text": message},
+            json={"chat_id": tg_chat, "text": message, "parse_mode": parse_mode,
+                  "disable_web_page_preview": True},
             timeout=10,
         )
     except Exception:

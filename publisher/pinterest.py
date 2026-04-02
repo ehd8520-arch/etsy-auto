@@ -739,24 +739,11 @@ def pin_listing(
         result["status"] = "success"
         result["pin_id"] = pin_id
 
-        # 항목 17: Telegram 알림
-        _notify(
-            f"Pinterest 핀 발행 완료\n"
-            f"- 제목: {pin_title[:50]}\n"
-            f"- 보드: {board_name}\n"
-            f"- 오늘 발행: {daily[today]}/{DAILY_PIN_LIMIT}"
-        )
         # 항목 19
         logger.info("핀 발행 성공 listing_id=%s pin_id=%s (오늘 %d개)",
                     listing_id, pin_id, daily[today])
     else:
         logger.error("핀 발행 최종 실패: listing_id=%s", listing_id)
-        _notify(
-            f"⚠️ Pinterest 핀 발행 실패\n"
-            f"- listing_id: {listing_id}\n"
-            f"- 제목: {pin_title[:50]}\n"
-            f"- 보드: {board_name}"
-        )
 
     return result
 
