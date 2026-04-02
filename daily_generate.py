@@ -121,7 +121,7 @@ def _cleanup_old_logs(max_days: int = 7) -> None:
             pass
 
 
-def _notify(message: str) -> None:
+def _notify(message: str, parse_mode: str = "HTML") -> None:
     """알림 전송 — Telegram 우선, Discord 폴백. 미설정 시 무음."""
     # Telegram (이미 .env에 설정됨 — 우선 사용)
     tg_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -131,7 +131,8 @@ def _notify(message: str) -> None:
             import requests as _req
             _req.post(
                 f"https://api.telegram.org/bot{tg_token}/sendMessage",
-                json={"chat_id": tg_chat, "text": message},
+                json={"chat_id": tg_chat, "text": message,
+                      "parse_mode": parse_mode, "disable_web_page_preview": True},
                 timeout=10,
             )
             return
@@ -904,9 +905,30 @@ def _print_summary(generated: list, progress: dict):
     if v2_n:
         logger.info("  v2 재발행 누적: %d개", v2_n)
     logger.info("=" * 55)
+
+    # 생성된 상품 목록 라인
+    items_lines = ""
+    for i, item in enumerate(generated):
+        combo = item.get("combo", {})
+        seo   = item.get("seo")
+        niche = combo.get("niche", "")
+        ptype = combo.get("planner_type", "")
+        theme = combo.get("theme_name", "")
+        title = (seo.title[:45] if seo and seo.title else f"{ptype}×{theme}")
+        niche_tag = f"[{niche}] " if niche else ""
+        items_lines += f"  {i+1}. {niche_tag}<b>{title}</b>\n"
+
+    progress_bar = f"{published_n}/{len(ALL_COMBINATIONS)}"
+    v2_line = f"\n🔁 v2 재발행 누적: {v2_n}개" if v2_n else ""
+
     _notify(
-        f"✅ Etsy 자동생성 완료 | {len(generated)}개 생성 | v1 {published_n}/{len(ALL_COMBINATIONS)}"
-        + (f" | v2 {v2_n}개" if v2_n else "")
+        f"✅ <b>Etsy 오늘의 상품 생성 완료!</b>\n"
+        f"━━━━━━━━━━━━━━━━\n"
+        f"📦 오늘 생성: <b>{len(generated)}개</b>\n"
+        f"{items_lines}"
+        f"━━━━━━━━━━━━━━━━\n"
+        f"📊 전체 진행: {progress_bar} 조합 완료{v2_line}\n"
+        f"⏰ 예약 발행은 매시간 자동 처리"
     )
 
 
