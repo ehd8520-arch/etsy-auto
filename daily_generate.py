@@ -606,8 +606,15 @@ def _save_queue(queue: list):
 
 def _append_queue(listing_id: str, shop_id: str, publish_at: str, label: str,
                   pinterest_info: dict | None = None):
-    """발행 대기 큐에 추가. publish_at = ISO datetime 문자열."""
+    """발행 대기 큐에 추가. publish_at = ISO datetime 문자열.
+    동일 listing_id가 이미 큐에 있으면 중복 추가하지 않음.
+    """
     queue = _load_queue()
+    # 중복 방지: 동일 listing_id가 이미 등록되어 있으면 스킵
+    existing_ids = {e["listing_id"] for e in queue}
+    if listing_id in existing_ids:
+        logger.info("📋 큐 중복 스킵: %s (listing_id=%s 이미 등록됨)", label, listing_id)
+        return
     entry: dict = {
         "listing_id": listing_id,
         "shop_id":    shop_id,

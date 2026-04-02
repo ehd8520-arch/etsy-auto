@@ -553,6 +553,29 @@ def get_active_listing_count(shop_id: str) -> Optional[int]:
     return None
 
 
+def update_listing_seo(shop_id: str, listing_id: str, title: str, tags: list, description: str) -> bool:
+    """리스팅 제목/태그/설명 업데이트 (PATCH)."""
+    payload = {}
+    if title:
+        payload["title"] = title[:140]
+    if tags:
+        payload["tags"] = [t[:20] for t in tags[:13]]
+    if description:
+        payload["description"] = description[:65535]
+    if not payload:
+        return False
+    result = _api_request(
+        "PATCH",
+        f"/application/shops/{shop_id}/listings/{listing_id}",
+        json=payload,
+    )
+    if result is not None:
+        logger.info("SEO updated: listing=%s title=%s...", listing_id, title[:40])
+        return True
+    logger.error("SEO update failed: listing=%s", listing_id)
+    return False
+
+
 def update_listing_price(shop_id: str, listing_id: str, price: float) -> bool:
     """리스팅 가격 업데이트."""
     result = _api_request(
