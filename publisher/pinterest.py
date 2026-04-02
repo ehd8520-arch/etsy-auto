@@ -401,13 +401,19 @@ async def _ui_select_or_create_board(page, board_name: str) -> None:
     """
     from playwright.async_api import TimeoutError as PWTimeout
     try:
-        # 1) "선택" 드롭다운 클릭
-        sel_btn = page.locator('div[role="button"]:has-text("선택")').first
+        # 1) 보드 선택 드롭다운 클릭 (한국어/영어 폴백)
+        sel_btn = page.locator(
+            'div[role="button"]:has-text("선택"), '
+            'div[role="button"]:has-text("Select"), '
+            'div[role="button"]:has-text("Choose a board")'
+        ).first
         await sel_btn.click(timeout=8000)
         await page.wait_for_timeout(1200)
 
-        # 2) 검색창에 보드 이름 입력 (앞 20자)
-        search = page.locator('input[placeholder="검색"]').first
+        # 2) 검색창에 보드 이름 입력 (한국어/영어 폴백)
+        search = page.locator(
+            'input[placeholder="검색"], input[placeholder="Search"]'
+        ).first
         if await search.count():
             await search.fill(board_name[:20])
             await page.wait_for_timeout(1000)
@@ -419,18 +425,27 @@ async def _ui_select_or_create_board(page, board_name: str) -> None:
             logger.debug("기존 보드 선택: %s", board_name)
             return
 
-        # 4) 없으면 "보드 만들기" 클릭
-        create_btn = page.locator('text=보드 만들기').first
+        # 4) 없으면 "보드 만들기" / "Create board" 클릭
+        create_btn = page.locator(
+            'text=보드 만들기, text=Create board'
+        ).first
         await create_btn.click(timeout=5000)
         await page.wait_for_timeout(1000)
 
-        # 5) 보드 이름 입력 (Korean placeholder)
-        name_input = page.locator("input[placeholder*='가고 싶은 곳']").first
+        # 5) 보드 이름 입력 (한국어/영어 placeholder 폴백)
+        name_input = page.locator(
+            "input[placeholder*='가고 싶은 곳'], "
+            "input[placeholder*='Name your board'], "
+            "input[placeholder*='Board name']"
+        ).first
         await name_input.fill(board_name, timeout=5000)
 
-        # 6) "만들기" 버튼 클릭 — 보드 이름 입력창 근처 다이얼로그 내 버튼만 선택
+        # 6) "만들기" / "Create" 버튼 클릭
         dialog = page.locator('[role="dialog"]').last
-        make_btn = dialog.locator('div[role="button"]:has-text("만들기"), button:has-text("만들기")').last
+        make_btn = dialog.locator(
+            'div[role="button"]:has-text("만들기"), button:has-text("만들기"), '
+            'div[role="button"]:has-text("Create"), button:has-text("Create")'
+        ).last
         await make_btn.click(timeout=5000)
         await page.wait_for_timeout(2000)
         logger.info("새 보드 생성 완료: %s", board_name)
