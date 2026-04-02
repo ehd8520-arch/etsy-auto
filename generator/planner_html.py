@@ -1796,7 +1796,7 @@ def _body_measurement_html(pg: int, total: int) -> str:
         <div style="margin-top:10px;margin-right:30px">
             <div class="section-title">📸 Progress Photos (Before / During / After)</div>
             <div style="display:flex;gap:8px;margin-top:4px">
-                {''.join(f"""<div style="flex:1;height:80px;border:2px dashed {t["accent"]};border-radius:8px;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:9px">{lbl}</div>""" for lbl in ["Month 1","Month 6","Month 12"])}
+                {''.join(f'<div style="flex:1;height:80px;border:2px dashed {t["accent"]};border-radius:8px;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:9px">{lbl}</div>' for lbl in ["Month 1","Month 6","Month 12"])}
             </div>
         </div>
     """)
