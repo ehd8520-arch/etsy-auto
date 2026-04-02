@@ -144,7 +144,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-02T20:00:00",
     "label": "daily×pastel_pink",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Caregiver Planner Printable, Goodnotes Undated Life Organizer Bundle, Instant Download PDF",
       "image_path": "output/planner/90b4b7db/mockups/01_hero.jpg",
@@ -164,7 +164,8 @@
         "mom life planner",
         "mothers day gift"
       ]
-    }
+    },
+    "activated_at": "2026-04-02T21:56:04"
   },
   {
     "listing_id": "4481638957",
