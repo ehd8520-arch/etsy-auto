@@ -611,9 +611,18 @@ def _append_queue(listing_id: str, shop_id: str, publish_at: str, label: str,
     """
     queue = _load_queue()
     # 중복 방지: 동일 listing_id가 이미 등록되어 있으면 스킵
+    # 단, pinterest_info 없는 기존 항목에 새 정보가 생기면 보완 (재실행 시 누락 복구)
     existing_ids = {e["listing_id"] for e in queue}
     if listing_id in existing_ids:
-        logger.info("📋 큐 중복 스킵: %s (listing_id=%s 이미 등록됨)", label, listing_id)
+        if pinterest_info:
+            for entry in queue:
+                if entry["listing_id"] == listing_id and not entry.get("pinterest_info"):
+                    entry["pinterest_info"] = pinterest_info
+                    _save_queue(queue)
+                    logger.info("📋 큐 pinterest_info 보완: %s (listing_id=%s)", label, listing_id)
+                    break
+        else:
+            logger.info("📋 큐 중복 스킵: %s (listing_id=%s 이미 등록됨)", label, listing_id)
         return
     entry: dict = {
         "listing_id": listing_id,
@@ -881,10 +890,14 @@ def main():
     # v2 여부 판단: 이미 v1 published에 있으면 v2
     _progress_snap = _load_progress()
     _v1_published  = set(_progress_snap.get("published", []))
+    # listing_ids_map은 successful_combos(활성화+큐 등록 성공)에 한정
+    # Why: drafted 전체로 만들면 idx=0 활성화 실패한 항목도 listing_ids에 저장되어
+    #      Etsy 드래프트 상태로 고아 발생 (published 배열엔 없고 listing_ids엔 있는 모순)
+    _successful_keys = {_combo_key(c) for c in successful_combos}
     _listing_ids_map = {
         _combo_key(item["combo"]): lid
         for item, lid in drafted
-        if lid
+        if lid and _combo_key(item["combo"]) in _successful_keys
     }
     _combo_product_ids = {
         _combo_key(item["combo"]): getattr(item["product"], "product_id", "")
