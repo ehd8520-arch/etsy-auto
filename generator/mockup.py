@@ -1669,6 +1669,18 @@ def generate_detail_mockup(art_path: str, output_path: str,
                 _detected_niche = _nk
                 break
 
+        # ── 타입별 실제 페이지수 ──
+        _TYPE_PAGE_COUNTS = {
+            "daily": 153, "weekly": 102, "budget": 62, "meal": 65,
+            "habit_tracker": 60, "gratitude": 110, "goal_setting": 41, "fitness": 97,
+        }
+        _page_count = 153  # 기본값 (daily)
+        _style_lower = style.lower()
+        for _tp, _cnt in _TYPE_PAGE_COUNTS.items():
+            if _style_lower.startswith(_tp) or f"_{_tp}_" in _style_lower or _style_lower == _tp:
+                _page_count = _cnt
+                break
+
         # ── 카테고리별 callout 항목 ──
         callout_map = {
             Category.WORKSHEET: [
@@ -1680,7 +1692,7 @@ def generate_detail_mockup(art_path: str, output_path: str,
             Category.PLANNER: [
                 "Undated Layout  Use Any Year",
                 "Hyperlinked Contents  1-Tap Nav",
-                "180+ Premium Pages  All-in-One",
+                f"{_page_count} Pages  All-in-One",
                 "GoodNotes & Notability  Ready",
             ],
             Category.SPREADSHEET: [

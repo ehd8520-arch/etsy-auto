@@ -92,7 +92,7 @@ def _get_seasonal_context(category: Category, month: int,
 # ── 플래너 카테고리 예시 (fallback용) ──
 CATEGORY_EXAMPLES = {
     Category.PLANNER: {
-        "title": "Daily Planner Printable PDF for Busy Women Who Want to Stay Organized, Undated All-in-One Layout, Tablet Friendly",
+        "title": "Daily Planner PDF for Busy Moms, Undated Hyperlinked GoodNotes iPad Notability Instant Download PDF",
         "tags": ["digital planner", "printable organizer", "weekly layout", "monthly calendar",
                  "productivity tool", "tablet planner pdf", "undated planner", "digital notebook",
                  "life organizer", "habit tracker", "self care journal", "goal setting", "instant download"],
@@ -109,6 +109,8 @@ VERIFIED_TAG_POOL = {
         "digital notebook pdf", "printable organizer", "productivity planner",
         "mom planner", "adhd planner", "gratitude journal",
         "fitness planner", "life planner",
+        "goodnotes planner", "ipad planner pdf", "notability planner",
+        "hyperlinked planner", "digital planner pdf",
     ],
 }
 
@@ -373,7 +375,7 @@ Rules (ALL must be followed):
 - Last word(s) must be "{title_end}"
 - No color/style/theme words (pastel, sage, navy, pink, classic, ocean)
 - No banned phrases: Best Seller, Sale, Free Shipping, Limited Time
-- No trademarked brand names in title or tags: GoodNotes, iPad, Notability, Canva, Kindle
+- No trademarked brand names: Canva, Kindle (GoodNotes, Notability, iPad는 허용 — Etsy 베스트셀러 표준)
 {persona_block}
 {seasonal_block}
 {dki_block}
@@ -449,7 +451,7 @@ def _gen_tags(product: Product, title: str, verified_pool: list[str],
     fixed_tags = (seasonal_clean + _theme_bonus + _niche_bonus)[:4]
     n_evergreen = SEO_TAG_COUNT - len(fixed_tags)
     _fixed_set = set(fixed_tags)
-    pool_str = "\n".join(f"  {t}" for t in verified_pool[:20] if t not in _fixed_set)
+    pool_str = "\n".join(f"  {t}" for t in verified_pool[:25] if t not in _fixed_set)
     trending_str = ", ".join(trending_kws[:4]) if trending_kws else "none"
     feedback_block = f"\nPrevious attempt failed. Fix these:\n{feedback}\n" if feedback else ""
 
