@@ -229,6 +229,9 @@ def run(dry: bool = False) -> int:
             if ok:
                 entry["done"] = True
                 entry["activated_at"] = now.strftime("%Y-%m-%dT%H:%M:%S")
+                # 즉시 저장: 크래시 시 재활성화 시도 방지
+                # Why: 루프 끝에서만 저장하면 크래시 후 done=False 복원 → Etsy 에러 무한 반복
+                _save_queue(queue)
                 activated += 1
                 logger.info("🚀 발행 완료: %s (listing_id=%s)", label, listing_id)
 
