@@ -2,7 +2,11 @@
   "published": [
     "daily_pastel_pink_mom",
     "daily_sage_green_sobriety_mom",
-    "daily_pastel_pink_sobriety_mom"
+    "daily_pastel_pink_sobriety_mom",
+    "daily_sage_green_pregnancy",
+    "daily_pastel_pink_pregnancy",
+    "daily_sage_green_caregiver",
+    "daily_pastel_pink_caregiver"
   ],
   "v2_published": [],
   "pruned_combos": [],
@@ -10,12 +14,20 @@
     "daily_sage_green_mom": "4481224707",
     "daily_pastel_pink_mom": "4481225279",
     "daily_sage_green_sobriety_mom": "4481232352",
-    "daily_pastel_pink_sobriety_mom": "4481226431"
+    "daily_pastel_pink_sobriety_mom": "4481226431",
+    "daily_sage_green_pregnancy": "4481623915",
+    "daily_pastel_pink_pregnancy": "4481631564",
+    "daily_sage_green_caregiver": "4481624833",
+    "daily_pastel_pink_caregiver": "4481625249"
   },
   "combo_ids": {
     "daily_sage_green_mom": "a929609b",
     "daily_pastel_pink_mom": "20459a11",
     "daily_sage_green_sobriety_mom": "4f097e1c",
-    "daily_pastel_pink_sobriety_mom": "b8a92e13"
+    "daily_pastel_pink_sobriety_mom": "b8a92e13",
+    "daily_sage_green_pregnancy": "cf5186f1",
+    "daily_pastel_pink_pregnancy": "a63f3307",
+    "daily_sage_green_caregiver": "84036dd9",
+    "daily_pastel_pink_caregiver": "90b4b7db"
   }
 }

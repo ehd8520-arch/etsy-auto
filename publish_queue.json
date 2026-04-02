@@ -82,5 +82,86 @@
       ]
     },
     "activated_at": "2026-04-02T04:58:02"
+  },
+  {
+    "listing_id": "4481631564",
+    "shop_id": "65243737",
+    "publish_at": "2026-04-02T14:00:00",
+    "label": "daily×pastel_pink",
+    "done": false,
+    "pinterest_info": {
+      "title": "Pregnancy Planner Printable, Goodnotes Undated Life Organizer Bundle, Instant Download PDF",
+      "image_path": "output/planner/a63f3307/mockups/01_hero.jpg",
+      "niche": "pregnancy",
+      "tags": [
+        "daily planner pdf",
+        "digital planner",
+        "printable planner",
+        "undated planner",
+        "tablet planner pdf",
+        "budget planner pdf",
+        "meal planner pdf",
+        "digital notebook pdf",
+        "productivity planner",
+        "weekly planner",
+        "gift for mom print",
+        "mom life planner",
+        "mothers day gift"
+      ]
+    }
+  },
+  {
+    "listing_id": "4481624833",
+    "shop_id": "65243737",
+    "publish_at": "2026-04-02T14:00:00",
+    "label": "daily×sage_green",
+    "done": false,
+    "pinterest_info": {
+      "title": "Caregiver Planner Printable, Goodnotes Undated Life Organizer Bundle, Instant Download PDF",
+      "image_path": "output/planner/84036dd9/mockups/01_hero.jpg",
+      "niche": "caregiver",
+      "tags": [
+        "daily planner pdf",
+        "digital planner",
+        "printable planner",
+        "undated planner",
+        "tablet planner pdf",
+        "budget planner pdf",
+        "meal planner pdf",
+        "self care planner",
+        "digital notebook pdf",
+        "printable organizer",
+        "gift for mom print",
+        "mom life planner",
+        "mothers day gift"
+      ]
+    }
+  },
+  {
+    "listing_id": "4481625249",
+    "shop_id": "65243737",
+    "publish_at": "2026-04-02T14:00:00",
+    "label": "daily×pastel_pink",
+    "done": false,
+    "pinterest_info": {
+      "title": "Caregiver Planner Printable, Goodnotes Undated Life Organizer Bundle, Instant Download PDF",
+      "image_path": "output/planner/90b4b7db/mockups/01_hero.jpg",
+      "niche": "caregiver",
+      "tags": [
+        "daily planner pdf",
+        "digital planner",
+        "printable planner",
+        "undated planner",
+        "tablet planner pdf",
+        "budget planner pdf",
+        "meal planner pdf",
+        "self care planner",
+        "digital notebook pdf",
+        "printable organizer",
+        "gift for mom print",
+        "mom life planner",
+        "mothers day gift"
+      ]
+    }
   }
 ]
