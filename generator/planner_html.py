@@ -1031,7 +1031,7 @@ def _cover_html(title: str, subtitle: str, pages: int, style: int = 1) -> str:
                 <p style="font-size:16px;color:rgba(255,255,255,0.88);font-weight:600;
                     letter-spacing:0.5px;margin-bottom:30px">{subtitle}</p>
                 <div style="display:flex;gap:0;border:1px solid rgba(255,255,255,0.4);border-radius:12px;overflow:hidden">
-                    {''.join(f"""<div style="flex:1;padding:10px 6px;text-align:center;font-size:10px;color:white;font-weight:700;border-right:1px solid rgba(255,255,255,0.2)">{f}</div>""" for f in [f"{pages}+pg","Undated","PDF","GN Ready","Download"])}
+                    {''.join(f'<div style="flex:1;padding:10px 6px;text-align:center;font-size:10px;color:white;font-weight:700;border-right:1px solid rgba(255,255,255,0.2)">{feat}</div>' for feat in [f"{pages}+pg","Undated","PDF","GN Ready","Download"])}
                 </div>
             </div>
         </div>"""
