@@ -190,5 +190,19 @@
         "pastel pink planner"
       ]
     }
+  },
+  {
+    "listing_id": "4481639393",
+    "shop_id": "65243737",
+    "publish_at": "2026-04-03T02:00:00",
+    "label": "daily×sage_green",
+    "done": false
+  },
+  {
+    "listing_id": "4481639785",
+    "shop_id": "65243737",
+    "publish_at": "2026-04-03T05:00:00",
+    "label": "daily×pastel_pink",
+    "done": false
   }
 ]
