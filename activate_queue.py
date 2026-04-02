@@ -91,25 +91,57 @@ def print_queue():
                     status)
 
 
+def _fetch_etsy_image(listing_id: str, dest: "Path") -> bool:
+    """로컬 이미지 없을 때 Etsy API에서 대표 이미지 다운로드. 성공 시 True."""
+    try:
+        import requests as _req
+        from publisher.etsy_api import _api_request
+        result = _api_request("GET", f"/application/listings/{listing_id}/images")
+        if not result:
+            return False
+        images = sorted(result.get("results", []), key=lambda x: x.get("rank", 99))
+        if not images:
+            return False
+        url = images[0].get("url_fullxfull") or images[0].get("url_570xN")
+        if not url:
+            return False
+        resp = _req.get(url, timeout=30)
+        resp.raise_for_status()
+        dest.write_bytes(resp.content)
+        logger.info("Etsy 이미지 다운로드 완료: listing=%s", listing_id)
+        return True
+    except Exception as e:
+        logger.warning("Etsy 이미지 다운로드 실패: %s", e)
+        return False
+
+
 def _pin_from_queue(entry: dict) -> None:
     """큐 항목의 pinterest_info로 핀 발행. 실패해도 메인 흐름 중단 없음."""
+    import tempfile
+    _tmp_dir = None
     try:
         from publisher.pinterest import pin_listing
+        from pathlib import Path as _Path
         info       = entry["pinterest_info"]
         listing_id = entry["listing_id"]
         image_path = info.get("image_path", "")
-        if not image_path:
-            logger.warning("Pinterest 핀 건너뜀 (이미지 경로 없음): listing_id=%s", listing_id)
-            return
-        from pathlib import Path as _Path
-        # 상대경로면 절대경로로 변환
-        _img = _Path(image_path)
-        if not _img.is_absolute():
+
+        # 로컬 이미지 확인
+        _img = _Path(image_path) if image_path else _Path("")
+        if not _img.is_absolute() and image_path:
             _img = _Path(__file__).parent / _img
-        image_path = str(_img)
+
+        # 로컬 이미지 없으면 Etsy에서 다운로드 (GitHub Actions 재실행 시 이미지 소실 대응)
         if not _img.exists():
-            logger.warning("Pinterest 핀 건너뜀 (이미지 파일 없음): %s", image_path)
-            return
+            if image_path:
+                logger.info("로컬 이미지 없음 — Etsy에서 다운로드 시도: listing=%s", listing_id)
+            _tmp_dir = tempfile.mkdtemp()
+            _img = _Path(_tmp_dir) / f"{listing_id}.jpg"
+            if not _fetch_etsy_image(str(listing_id), _img):
+                logger.warning("Pinterest 핀 건너뜀 (이미지 없음): listing_id=%s", listing_id)
+                return
+        image_path = str(_img)
+
         etsy_url = f"https://www.etsy.com/listing/{listing_id}"
         result = pin_listing(
             listing_id    = listing_id,
@@ -129,6 +161,13 @@ def _pin_from_queue(entry: dict) -> None:
             logger.warning("📌 Pinterest 핀 상태=%s: listing_id=%s", status, listing_id)
     except Exception as e:
         logger.warning("Pinterest 핀 실패 (건너뜀): %s", e)
+    finally:
+        if _tmp_dir:
+            import shutil
+            try:
+                shutil.rmtree(_tmp_dir, ignore_errors=True)
+            except Exception:
+                pass
 
 
 def run(dry: bool = False) -> int:
