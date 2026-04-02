@@ -714,15 +714,16 @@ def main():
         return
 
     # ── 큐 미발행 항목 수 확인 (이미 충분히 쌓여있으면 생성 스킵) ──
-    if args.publish and not args.force:
-        _pending = [e for e in _load_queue() if not e.get("done")]
-        if len(_pending) >= count:
-            logger.warning(
-                "⚠️ 미발행 큐 %d개 — 이미 충분함 (기준: %d개). 생성 스킵. "
-                "강제 실행하려면 --force 플래그 사용.", len(_pending), count
-            )
-            _release_lock()
-            return
+    # count는 아직 미결정이므로 args.count 기본값(4) 사용
+    _pending_check = [e for e in _load_queue() if not e.get("done")]
+    _skip_threshold = args.count  # 오토스케일 전 기본값 기준
+    if args.publish and not args.force and len(_pending_check) >= _skip_threshold:
+        logger.warning(
+            "⚠️ 미발행 큐 %d개 — 이미 충분함 (기준: %d개). 생성 스킵. "
+            "강제 실행하려면 --force 플래그 사용.", len(_pending_check), _skip_threshold
+        )
+        _release_lock()
+        return
     if args.mock:
         os.environ["WALL_ART_MOCK"] = "true"
         logger.info("*** MOCK 모드 — 이미지 API 없음, 비용 $0 ***")
