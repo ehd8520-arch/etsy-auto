@@ -368,7 +368,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-03T19:46:49",
     "label": "daily×sage_green",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Sobriety Planner Printable for people in recovery who want to track their sober journey, with a clean minimalist wellness design PDF",
       "image_path": "output/planner/576a5a90/mockups/01_hero.jpg",
@@ -388,7 +388,8 @@
         "sobriety gift",
         "recovery gift idea"
       ]
-    }
+    },
+    "activated_at": "2026-04-03T19:57:05"
   },
   {
     "listing_id": "4482516657",
