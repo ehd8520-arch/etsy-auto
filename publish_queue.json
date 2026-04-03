@@ -396,7 +396,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-03T22:40:00",
     "label": "daily×sage_green",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "ADHD Teacher Planner Printable for Teachers with ADHD, Simplified Organization PDF",
       "image_path": "output/planner/bfd40f33/mockups/01_hero.jpg",
@@ -416,7 +416,8 @@
         "adhd teacher gift",
         "teacher gift idea"
       ]
-    }
+    },
+    "activated_at": "2026-04-03T23:51:18"
   },
   {
     "listing_id": "4482517047",
