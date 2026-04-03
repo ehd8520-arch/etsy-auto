@@ -256,7 +256,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-03T08:00:00",
     "label": "daily×pastel_pink",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "ADHD Nurse Planner Printable for nurses with ADHD staying safe and organized on demanding shifts, a thoughtful gift with a gentle touch PDF",
       "image_path": "output/planner/ad7d59ec/mockups/01_hero.jpg",
@@ -276,7 +276,8 @@
         "nurse appreciation",
         "pastel pink planner"
       ]
-    }
+    },
+    "activated_at": "2026-04-03T08:37:21"
   },
   {
     "listing_id": "4481660795",
