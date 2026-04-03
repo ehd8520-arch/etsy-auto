@@ -284,7 +284,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-03T11:00:00",
     "label": "daily×sage_green",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "ADHD Planner Printable for people with ADHD who struggle with focus and time management, Minimalist Organization PDF",
       "image_path": "output/planner/c94550a9/mockups/01_hero.jpg",
@@ -304,7 +304,8 @@
         "adhd gift idea",
         "adhd awareness gift"
       ]
-    }
+    },
+    "activated_at": "2026-04-03T11:26:44"
   },
   {
     "listing_id": "4481661243",
