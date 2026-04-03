@@ -200,7 +200,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-03T02:00:00",
     "label": "daily×sage_green",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Nurse Planner Printable for Busy Nurses Staying Organized Through Every Shift, Daily Structure PDF",
       "image_path": "output/planner/6edd1510/mockups/01_hero.jpg",
@@ -220,14 +220,15 @@
         "nurse appreciation",
         "sage green planner"
       ]
-    }
+    },
+    "activated_at": "2026-04-03T05:53:18"
   },
   {
     "listing_id": "4481639785",
     "shop_id": "65243737",
     "publish_at": "2026-04-03T05:00:00",
     "label": "daily×pastel_pink",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Nurse Planner Printable with Gentle Structure for Healthcare Professionals, Self Care and Shift Planning PDF",
       "image_path": "output/planner/54928cd7/mockups/01_hero.jpg",
@@ -247,7 +248,8 @@
         "nurse appreciation",
         "pastel pink planner"
       ]
-    }
+    },
+    "activated_at": "2026-04-03T05:53:18"
   },
   {
     "listing_id": "4481660419",
