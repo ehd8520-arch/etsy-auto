@@ -312,7 +312,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-03T14:00:00",
     "label": "daily×sage_green",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Anxiety Planner Printable for People Managing Anxiety, Gentle Calming Structure, Minimalist Wellness PDF",
       "image_path": "output/planner/d108977c/mockups/01_hero.jpg",
@@ -332,7 +332,8 @@
         "anxiety relief gift",
         "mental health gift"
       ]
-    }
+    },
+    "activated_at": "2026-04-03T14:30:25"
   },
   {
     "listing_id": "4481224707",
