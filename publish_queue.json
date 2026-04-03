@@ -340,7 +340,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-03T17:00:00",
     "label": "daily×sage_green",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Mom Planner Printable for Busy Moms Staying Calm and Organized, Nature-Inspired Daily Life Planner PDF",
       "image_path": "output/planner/a929609b/mockups/01_hero.jpg",
@@ -360,7 +360,8 @@
         "mothers day gift",
         "sage green planner"
       ]
-    }
+    },
+    "activated_at": "2026-04-03T17:02:47"
   },
   {
     "listing_id": "4482521916",
