@@ -80,6 +80,9 @@ jobs:
       - name: Activate queued listings (every hour)
         run: python activate_queue.py
 
+      - name: Fix missing Pinterest pins (retroactive)
+        run: python fix_pinterest_pins.py
+
       - name: Save state files back to repo
         if: always()
         run: |

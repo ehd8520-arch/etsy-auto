@@ -116,6 +116,20 @@ class App(tk.Tk):
              lambda: self._run(["--preview"])),
         ]
 
+        # ── 자동발행 ON/OFF 토글 버튼 ──
+        sched_frame = tk.Frame(self, bg="#1e1e2e", pady=6)
+        sched_frame.pack(fill="x", padx=16)
+        self.lbl_sched = tk.Label(sched_frame, text="",
+                                  font=("Segoe UI", 10), bg="#1e1e2e", fg="#f9e2af")
+        self.lbl_sched.pack(side="left", padx=(0, 12))
+        self.btn_sched_toggle = tk.Button(
+            sched_frame, text="", command=self._toggle_scheduler,
+            font=("Segoe UI", 10, "bold"), relief="flat", padx=12, pady=4,
+            cursor="hand2",
+        )
+        self.btn_sched_toggle.pack(side="left")
+        self._refresh_scheduler_state()
+
         for i, (label, bg, fg, cmd) in enumerate(buttons):
             b = tk.Button(btn_frame, text=label, command=cmd,
                           bg=bg, fg=fg, font=("Segoe UI", 10, "bold"),
@@ -236,6 +250,63 @@ class App(tk.Tk):
                 self._log("\n[사용자 중단]\n")
             except Exception:
                 pass
+
+    def _refresh_scheduler_state(self):
+        """Task Scheduler 상태 읽어서 라벨+버튼 업데이트."""
+        try:
+            result = subprocess.run(
+                ["powershell", "-Command",
+                 "(Get-ScheduledTask -TaskName 'EtsyActivateQueue').State"],
+                capture_output=True, text=True, timeout=5
+            )
+            state = result.stdout.strip()
+        except Exception:
+            state = "Unknown"
+
+        if state == "Ready":
+            self.lbl_sched.config(text="⏰ 자동발행: 활성 (매시간)", fg="#a6e3a1")
+            self.btn_sched_toggle.config(
+                text="⏸  자동발행 중단", bg="#f38ba8", fg="#1e1e2e",
+                activebackground="#f38ba8")
+        elif state == "Disabled":
+            self.lbl_sched.config(text="⛔ 자동발행: 중단됨", fg="#f38ba8")
+            self.btn_sched_toggle.config(
+                text="▶  자동발행 재개", bg="#a6e3a1", fg="#1e1e2e",
+                activebackground="#a6e3a1")
+        else:
+            self.lbl_sched.config(text=f"❓ 자동발행: {state}", fg="#f9e2af")
+            self.btn_sched_toggle.config(
+                text="↺ 상태 새로고침", bg="#89b4fa", fg="#1e1e2e",
+                activebackground="#89b4fa")
+
+    def _toggle_scheduler(self):
+        """EtsyActivateQueue Task Scheduler 활성/비활성 토글."""
+        try:
+            result = subprocess.run(
+                ["powershell", "-Command",
+                 "(Get-ScheduledTask -TaskName 'EtsyActivateQueue').State"],
+                capture_output=True, text=True, timeout=5
+            )
+            state = result.stdout.strip()
+        except Exception:
+            state = "Unknown"
+
+        if state == "Ready":
+            subprocess.run(
+                ["powershell", "-Command",
+                 "Disable-ScheduledTask -TaskName 'EtsyActivateQueue'"],
+                capture_output=True, timeout=10
+            )
+            self._log("[자동발행 중단] Task Scheduler 비활성화됨\n")
+        else:
+            subprocess.run(
+                ["powershell", "-Command",
+                 "Enable-ScheduledTask -TaskName 'EtsyActivateQueue'"],
+                capture_output=True, timeout=10
+            )
+            self._log("[자동발행 재개] Task Scheduler 활성화됨\n")
+
+        self._refresh_scheduler_state()
 
 
 # ── 엔트리포인트 ──────────────────────────────────────────────────────────────

@@ -36,7 +36,7 @@ def install_task(hour: int = 9, minute: int = 0) -> bool:
     cmd = [
         "schtasks", "/Create",
         "/TN", TASK_NAME,
-        "/TR", f'"{PYTHON_PATH}" "{SCRIPT_PATH}"',
+        "/TR", f'"{PYTHON_PATH}" "{SCRIPT_PATH}" --publish',
         "/SC", "DAILY",
         "/ST", f"{hour:02d}:{minute:02d}",
         "/F",
@@ -140,19 +140,18 @@ def uninstall_task() -> bool:
 
 
 def uninstall_queue_task() -> bool:
-    """Remove hourly queue activation task."""
-    cmd = ["schtasks", "/Delete", "/TN", TASK_NAME_QUEUE, "/F"]
-    try:
-        result = subprocess.run(cmd, capture_output=True, text=True)
-        if result.returncode == 0:
-            print(f"Task '{TASK_NAME_QUEUE}' removed")
-            return True
-        else:
-            print(f"Failed: {result.stderr}")
-            return False
-    except Exception as e:
-        print(f"Error: {e}")
-        return False
+    """Remove hourly queue activation task (both possible task names)."""
+    removed = False
+    for name in [TASK_NAME_QUEUE, "EtsyActivateQueue"]:  # 중복 작업명 둘 다 제거
+        cmd = ["schtasks", "/Delete", "/TN", name, "/F"]
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            if result.returncode == 0:
+                print(f"Task '{name}' removed")
+                removed = True
+        except Exception:
+            pass
+    return removed
 
 
 def check_status() -> None:
