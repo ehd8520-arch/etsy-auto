@@ -326,6 +326,8 @@ def mark_published(combos: list[dict],
         progress.setdefault("listing_ids", {}).update(listing_ids)
     if combo_product_ids:
         progress.setdefault("combo_ids", {}).update(combo_product_ids)
+    # 오늘 날짜 기록 → 당일 재실행 차단용
+    progress["last_generated_date"] = datetime.utcnow().strftime("%Y-%m-%d")
     _save_progress(progress)
     _backup_progress()
 
@@ -722,8 +724,21 @@ def main():
         print_status()
         return
 
-    # ── 큐 미발행 항목 수 확인 (미발행 항목이 1개라도 있으면 생성 스킵) ──
-    # Why: 이전 배치가 아직 발행 안 됐으면 새로 생성하지 않음 → 과다 발행 완전 차단
+    # ── 오늘 날짜 기반 중복 실행 차단 (최우선) ──
+    # Why: activate_queue.py가 같은 workflow에서 먼저 실행되어 큐를 비운 후
+    #      daily_generate가 실행되면 큐 pending check를 통과해버려 무한 재생성됨.
+    #      날짜 기반 체크는 큐 상태와 무관하게 하루 1회만 보장.
+    _today_utc = datetime.utcnow().strftime("%Y-%m-%d")
+    _prog_for_date_check = _load_progress()
+    _last_generated = _prog_for_date_check.get("last_generated_date", "")
+    if args.publish and not args.force and _last_generated == _today_utc:
+        logger.warning(
+            "⚠️ 오늘(%s) 이미 생성 완료 — 재실행 차단. 강제 실행하려면 --force 사용.", _today_utc
+        )
+        _release_lock()
+        return
+
+    # ── 큐 미발행 항목 수 확인 (2차 방어) ──
     _pending_check = [e for e in _load_queue() if not e.get("done")]
     if args.publish and not args.force and len(_pending_check) >= 1:
         logger.warning(
