@@ -60,6 +60,11 @@ jobs:
             fi
           fi
 
+      - name: Restore Pinterest session
+        run: |
+          mkdir -p db
+          echo '${{ secrets.PINTEREST_SESSION }}' > db/pinterest_session.json
+
       - name: Restore state files
         run: |
           mkdir -p db
