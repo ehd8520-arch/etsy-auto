@@ -424,7 +424,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-04T02:14:21",
     "label": "daily×sage_green",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Christian Teacher Planner Printable for faith-based teachers who teach with purpose and prayer, Mindful Organization PDF",
       "image_path": "output/planner/4d9ed5fb/mockups/01_hero.jpg",
@@ -444,6 +444,7 @@
         "christian teacher gi",
         "faith teacher gift"
       ]
-    }
+    },
+    "activated_at": "2026-04-04T05:16:36"
   }
 ]
