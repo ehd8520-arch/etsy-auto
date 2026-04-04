@@ -91,7 +91,7 @@ jobs:
   daily:
     runs-on: ubuntu-latest
     timeout-minutes: 120
-    if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
+    if: ${{ github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch' }}
     permissions:
       contents: write
 
