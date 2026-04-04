@@ -8,14 +8,15 @@ on:
 
 concurrency:
   group: etsy-auto
-  cancel-in-progress: false  # 실행 중이면 새 실행은 완료까지 대기 (취소 X)
+  cancel-in-progress: false
 
 jobs:
-  run:
+  # ── 매시간 job: 주문알림 + 큐 활성화 ──────────────────────────────────────
+  hourly:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 30
     permissions:
-      contents: write      # state 파일 commit-back 필요
+      contents: write
 
     steps:
       - name: Checkout code
@@ -93,7 +94,6 @@ jobs:
           GROQ_API_KEY_9=${{ secrets.GROQ_API_KEY_9 }}
           GROQ_API_KEY_10=${{ secrets.GROQ_API_KEY_10 }}
           EOF
-          # config/.env도 동일하게 생성 (settings.py가 config/.env 우선 로드)
           mkdir -p config
           cp .env config/.env
 
@@ -113,20 +113,14 @@ jobs:
             if [ -n "$ACCESS" ] && [ -n "$REFRESH" ]; then
               sed -i "s|^ETSY_ACCESS_TOKEN=.*|ETSY_ACCESS_TOKEN=$ACCESS|" .env
               sed -i "s|^ETSY_REFRESH_TOKEN=.*|ETSY_REFRESH_TOKEN=$REFRESH|" .env
-              echo "토큰 복원 완료 (token_state.json → .env)"
             fi
           fi
 
-      - name: Restore state files (order alert + pinterest pins)
+      - name: Restore state files
         run: |
           mkdir -p db
-          # 파일이 없으면 초기값 생성 (첫 실행 또는 삭제된 경우)
           [ -f db/order_alert_state.json ] || echo '{"seen_receipt_ids":[]}' > db/order_alert_state.json
           [ -f db/pinterest_pins.json ]    || echo '{"pins":{},"daily":{}}' > db/pinterest_pins.json
-
-      - name: Check token & session expiry (daily warning)
-        if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
-        run: python -m monitor.expiry_check
 
       - name: Check new orders (every hour)
         run: python -m monitor.order_alert
@@ -137,32 +131,149 @@ jobs:
       - name: Activate queued listings (every hour)
         run: python activate_queue.py
 
-      - name: Run daily generate (only at 09:00 KST)
-        if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
-        run: python daily_generate.py --publish
+      - name: Save state files back to repo
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add daily_progress.json publish_queue.json 2>/dev/null || true
+          git add db/order_alert_state.json db/pinterest_pins.json db/token_meta.json db/token_state.json 2>/dev/null || true
+          git add db/review_history.json db/sale_message_state.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "chore: auto-save state [skip ci]"
+          git pull --rebase origin HEAD 2>/dev/null || true
+          git push origin HEAD 2>/dev/null || true
 
-      - name: Run price updater (weekly on Monday 09:00 KST)
-        if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
+  # ── 매일 job: 상품 생성 (UTC 00:00에만 실행) ─────────────────────────────
+  daily:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
+      - name: Create .env file from secrets
+        run: |
+          cat <<EOF > .env
+          GEMINI_API_KEY_1=${{ secrets.GEMINI_API_KEY_1 }}
+          GEMINI_API_KEY_2=${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3=${{ secrets.GEMINI_API_KEY_3 }}
+          GEMINI_API_KEY_4=${{ secrets.GEMINI_API_KEY_4 }}
+          GEMINI_API_KEY_5=${{ secrets.GEMINI_API_KEY_5 }}
+          GEMINI_API_KEY_6=${{ secrets.GEMINI_API_KEY_6 }}
+          GEMINI_API_KEY_7=${{ secrets.GEMINI_API_KEY_7 }}
+          GEMINI_API_KEY_8=${{ secrets.GEMINI_API_KEY_8 }}
+          GEMINI_API_KEY_9=${{ secrets.GEMINI_API_KEY_9 }}
+          GEMINI_API_KEY_10=${{ secrets.GEMINI_API_KEY_10 }}
+          CLOUDFLARE_ACCOUNT_ID_1=${{ secrets.CLOUDFLARE_ACCOUNT_ID_1 }}
+          CLOUDFLARE_API_TOKEN_1=${{ secrets.CLOUDFLARE_API_TOKEN_1 }}
+          CLOUDFLARE_ACCOUNT_ID_2=${{ secrets.CLOUDFLARE_ACCOUNT_ID_2 }}
+          CLOUDFLARE_API_TOKEN_2=${{ secrets.CLOUDFLARE_API_TOKEN_2 }}
+          CLOUDFLARE_ACCOUNT_ID_3=${{ secrets.CLOUDFLARE_ACCOUNT_ID_3 }}
+          CLOUDFLARE_API_TOKEN_3=${{ secrets.CLOUDFLARE_API_TOKEN_3 }}
+          CLOUDFLARE_ACCOUNT_ID_4=${{ secrets.CLOUDFLARE_ACCOUNT_ID_4 }}
+          CLOUDFLARE_API_TOKEN_4=${{ secrets.CLOUDFLARE_API_TOKEN_4 }}
+          CLOUDFLARE_ACCOUNT_ID_5=${{ secrets.CLOUDFLARE_ACCOUNT_ID_5 }}
+          CLOUDFLARE_API_TOKEN_5=${{ secrets.CLOUDFLARE_API_TOKEN_5 }}
+          CLOUDFLARE_ACCOUNT_ID_6=${{ secrets.CLOUDFLARE_ACCOUNT_ID_6 }}
+          CLOUDFLARE_API_TOKEN_6=${{ secrets.CLOUDFLARE_API_TOKEN_6 }}
+          CLOUDFLARE_ACCOUNT_ID_7=${{ secrets.CLOUDFLARE_ACCOUNT_ID_7 }}
+          CLOUDFLARE_API_TOKEN_7=${{ secrets.CLOUDFLARE_API_TOKEN_7 }}
+          CLOUDFLARE_ACCOUNT_ID_8=${{ secrets.CLOUDFLARE_ACCOUNT_ID_8 }}
+          CLOUDFLARE_API_TOKEN_8=${{ secrets.CLOUDFLARE_API_TOKEN_8 }}
+          CLOUDFLARE_ACCOUNT_ID_9=${{ secrets.CLOUDFLARE_ACCOUNT_ID_9 }}
+          CLOUDFLARE_API_TOKEN_9=${{ secrets.CLOUDFLARE_API_TOKEN_9 }}
+          CLOUDFLARE_ACCOUNT_ID_10=${{ secrets.CLOUDFLARE_ACCOUNT_ID_10 }}
+          CLOUDFLARE_API_TOKEN_10=${{ secrets.CLOUDFLARE_API_TOKEN_10 }}
+          TOGETHER_API_KEY=${{ secrets.TOGETHER_API_KEY }}
+          ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+          DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }}
+          ETSY_API_KEY=${{ secrets.ETSY_API_KEY }}
+          ETSY_API_SECRET=${{ secrets.ETSY_API_SECRET }}
+          ETSY_ACCESS_TOKEN=${{ secrets.ETSY_ACCESS_TOKEN }}
+          ETSY_REFRESH_TOKEN=${{ secrets.ETSY_REFRESH_TOKEN }}
+          ETSY_SHOP_ID=${{ secrets.ETSY_SHOP_ID }}
+          GUMROAD_ACCESS_TOKEN=${{ secrets.GUMROAD_ACCESS_TOKEN }}
+          MAX_PRODUCTS_PER_RUN=4
+          TEST_MODE=false
+          GROQ_API_KEY_1=${{ secrets.GROQ_API_KEY_1 }}
+          GROQ_API_KEY_2=${{ secrets.GROQ_API_KEY_2 }}
+          GROQ_API_KEY_3=${{ secrets.GROQ_API_KEY_3 }}
+          GROQ_API_KEY_4=${{ secrets.GROQ_API_KEY_4 }}
+          GROQ_API_KEY_5=${{ secrets.GROQ_API_KEY_5 }}
+          GROQ_API_KEY_6=${{ secrets.GROQ_API_KEY_6 }}
+          GROQ_API_KEY_7=${{ secrets.GROQ_API_KEY_7 }}
+          GROQ_API_KEY_8=${{ secrets.GROQ_API_KEY_8 }}
+          GROQ_API_KEY_9=${{ secrets.GROQ_API_KEY_9 }}
+          GROQ_API_KEY_10=${{ secrets.GROQ_API_KEY_10 }}
+          EOF
+          mkdir -p config
+          cp .env config/.env
+
+      - name: Authenticate gh CLI for token updates
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Restore Pinterest session
+        run: |
+          mkdir -p db
+          echo '${{ secrets.PINTEREST_SESSION }}' > db/pinterest_session.json
+
+      - name: Restore Etsy tokens from token_state.json (if newer than secrets)
+        run: |
+          if [ -f db/token_state.json ]; then
+            ACCESS=$(python3 -c "import json; d=json.load(open('db/token_state.json')); print(d.get('ETSY_ACCESS_TOKEN',''))" 2>/dev/null)
+            REFRESH=$(python3 -c "import json; d=json.load(open('db/token_state.json')); print(d.get('ETSY_REFRESH_TOKEN',''))" 2>/dev/null)
+            if [ -n "$ACCESS" ] && [ -n "$REFRESH" ]; then
+              sed -i "s|^ETSY_ACCESS_TOKEN=.*|ETSY_ACCESS_TOKEN=$ACCESS|" .env
+              sed -i "s|^ETSY_REFRESH_TOKEN=.*|ETSY_REFRESH_TOKEN=$REFRESH|" .env
+            fi
+          fi
+
+      - name: Restore state files
+        run: |
+          mkdir -p db
+          [ -f db/order_alert_state.json ] || echo '{"seen_receipt_ids":[]}' > db/order_alert_state.json
+          [ -f db/pinterest_pins.json ]    || echo '{"pins":{},"daily":{}}' > db/pinterest_pins.json
+
+      - name: Check token & session expiry
+        run: python -m monitor.expiry_check
+
+      - name: Run daily generate (4개, 3시간 간격)
+        run: python daily_generate.py --count 4 --publish
+
+      - name: Run price updater (월요일만)
         run: |
           DAY=$(date +%u)
           if [ "$DAY" = "1" ]; then
-            echo "월요일 — 가격 업데이트 실행"
             python price_updater.py
-          else
-            echo "월요일 아닌 날 — 가격 업데이트 스킵 (오늘은 요일 $DAY)"
           fi
 
-      - name: Run stale listing pruner (monthly on 1st)
-        if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
+      - name: Run stale listing pruner (매월 1일만)
         run: |
           DAY=$(date +%d)
           if [ "$DAY" = "01" ]; then
-            echo "매월 1일 — stale pruner 실행"
             python stale_listing_pruner.py
-            echo "매월 1일 — 구매 감사 메시지 교체"
             python -m monitor.sale_message_updater
-          else
-            echo "1일 아닌 날 — pruner/메시지 스킵 (오늘은 $DAY일)"
           fi
 
       - name: Save state files back to repo
@@ -170,12 +281,10 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # 민감 파일 제외하고 상태 파일만 추가
           git add daily_progress.json publish_queue.json 2>/dev/null || true
           git add db/order_alert_state.json db/pinterest_pins.json db/token_meta.json db/token_state.json 2>/dev/null || true
           git add db/review_history.json db/sale_message_state.json 2>/dev/null || true
           git add monitor/__init__.py monitor/expiry_check.py 2>/dev/null || true
-          # 변경사항 있을 때만 커밋
           git diff --staged --quiet || git commit -m "chore: auto-save state [skip ci]"
           git pull --rebase origin HEAD 2>/dev/null || true
           git push origin HEAD 2>/dev/null || true
