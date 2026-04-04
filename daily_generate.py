@@ -966,7 +966,6 @@ def main():
     logger.info("  ※ 예약 발행은 activate_queue.py 가 매시간 자동 처리합니다.")
     _total_elapsed = _time_mod.time() - _stage1_start
     logger.info("  총 소요 시간: %.0f초 (%.1f분)", _total_elapsed, _total_elapsed / 60)
-    _ensure_queue_scheduler()
     _open_preview(generated)
     _print_summary(generated, _load_progress())
     _release_lock()
