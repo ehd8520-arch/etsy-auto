@@ -109,14 +109,14 @@
         "mothers day gift"
       ]
     },
-    "activated_at": "2026-04-02T15:01:28"
+    "activated_at": "2026-04-02T14:00:02"
   },
   {
     "listing_id": "4481624833",
     "shop_id": "65243737",
     "publish_at": "2026-04-02T17:00:00",
     "label": "daily×sage_green",
-    "done": true,
+    "done": false,
     "pinterest_info": {
       "title": "Caregiver Planner Printable, Goodnotes Undated Life Organizer Bundle, Instant Download PDF",
       "image_path": "output/planner/84036dd9/mockups/01_hero.jpg",
@@ -136,15 +136,14 @@
         "mom life planner",
         "mothers day gift"
       ]
-    },
-    "activated_at": "2026-04-02T19:39:53"
+    }
   },
   {
     "listing_id": "4481625249",
     "shop_id": "65243737",
     "publish_at": "2026-04-02T20:00:00",
     "label": "daily×pastel_pink",
-    "done": true,
+    "done": false,
     "pinterest_info": {
       "title": "Caregiver Planner Printable, Goodnotes Undated Life Organizer Bundle, Instant Download PDF",
       "image_path": "output/planner/90b4b7db/mockups/01_hero.jpg",
@@ -164,15 +163,14 @@
         "mom life planner",
         "mothers day gift"
       ]
-    },
-    "activated_at": "2026-04-02T21:56:04"
+    }
   },
   {
     "listing_id": "4481638957",
     "shop_id": "65243737",
     "publish_at": "2026-04-02T23:00:00",
     "label": "daily×pastel_pink",
-    "done": true,
+    "done": false,
     "pinterest_info": {
       "title": "Daily Planner Pdf for Busy Moms, Beautifully Designed with a Soft Touch for a More Mindful Day PDF",
       "image_path": "output/planner/c5fd294b/mockups/01_hero.jpg",
@@ -192,15 +190,14 @@
         "mothers day gift",
         "pastel pink planner"
       ]
-    },
-    "activated_at": "2026-04-02T23:06:34"
+    }
   },
   {
     "listing_id": "4481639393",
     "shop_id": "65243737",
     "publish_at": "2026-04-03T02:00:00",
     "label": "daily×sage_green",
-    "done": true,
+    "done": false,
     "pinterest_info": {
       "title": "Nurse Planner Printable for Busy Nurses Staying Organized Through Every Shift, Daily Structure PDF",
       "image_path": "output/planner/6edd1510/mockups/01_hero.jpg",
@@ -220,15 +217,14 @@
         "nurse appreciation",
         "sage green planner"
       ]
-    },
-    "activated_at": "2026-04-03T05:53:18"
+    }
   },
   {
     "listing_id": "4481639785",
     "shop_id": "65243737",
     "publish_at": "2026-04-03T05:00:00",
     "label": "daily×pastel_pink",
-    "done": true,
+    "done": false,
     "pinterest_info": {
       "title": "Nurse Planner Printable with Gentle Structure for Healthcare Professionals, Self Care and Shift Planning PDF",
       "image_path": "output/planner/54928cd7/mockups/01_hero.jpg",
@@ -248,15 +244,14 @@
         "nurse appreciation",
         "pastel pink planner"
       ]
-    },
-    "activated_at": "2026-04-03T05:53:18"
+    }
   },
   {
     "listing_id": "4481660419",
     "shop_id": "65243737",
     "publish_at": "2026-04-03T08:00:00",
     "label": "daily×pastel_pink",
-    "done": true,
+    "done": false,
     "pinterest_info": {
       "title": "ADHD Nurse Planner Printable for nurses with ADHD staying safe and organized on demanding shifts, a thoughtful gift with a gentle touch PDF",
       "image_path": "output/planner/ad7d59ec/mockups/01_hero.jpg",
@@ -276,15 +271,14 @@
         "nurse appreciation",
         "pastel pink planner"
       ]
-    },
-    "activated_at": "2026-04-03T08:37:21"
+    }
   },
   {
     "listing_id": "4481660795",
     "shop_id": "65243737",
     "publish_at": "2026-04-03T11:00:00",
     "label": "daily×sage_green",
-    "done": true,
+    "done": false,
     "pinterest_info": {
       "title": "ADHD Planner Printable for people with ADHD who struggle with focus and time management, Minimalist Organization PDF",
       "image_path": "output/planner/c94550a9/mockups/01_hero.jpg",
@@ -304,15 +298,14 @@
         "adhd gift idea",
         "adhd awareness gift"
       ]
-    },
-    "activated_at": "2026-04-03T11:26:44"
+    }
   },
   {
     "listing_id": "4481661243",
     "shop_id": "65243737",
     "publish_at": "2026-04-03T14:00:00",
     "label": "daily×sage_green",
-    "done": true,
+    "done": false,
     "pinterest_info": {
       "title": "Anxiety Planner Printable for People Managing Anxiety, Gentle Calming Structure, Minimalist Wellness PDF",
       "image_path": "output/planner/d108977c/mockups/01_hero.jpg",
@@ -332,15 +325,14 @@
         "anxiety relief gift",
         "mental health gift"
       ]
-    },
-    "activated_at": "2026-04-03T14:30:25"
+    }
   },
   {
     "listing_id": "4481224707",
     "shop_id": "65243737",
     "publish_at": "2026-04-03T17:00:00",
     "label": "daily×sage_green",
-    "done": true,
+    "done": false,
     "pinterest_info": {
       "title": "Mom Planner Printable for Busy Moms Staying Calm and Organized, Nature-Inspired Daily Life Planner PDF",
       "image_path": "output/planner/a929609b/mockups/01_hero.jpg",
@@ -360,91 +352,6 @@
         "mothers day gift",
         "sage green planner"
       ]
-    },
-    "activated_at": "2026-04-03T17:02:47"
-  },
-  {
-    "listing_id": "4482521916",
-    "shop_id": "65243737",
-    "publish_at": "2026-04-03T19:46:49",
-    "label": "daily×sage_green",
-    "done": true,
-    "pinterest_info": {
-      "title": "Sobriety Planner Printable for people in recovery who want to track their sober journey, with a clean minimalist wellness design PDF",
-      "image_path": "output/planner/576a5a90/mockups/01_hero.jpg",
-      "niche": "sobriety",
-      "tags": [
-        "sobriety planner",
-        "recovery planner",
-        "sober living",
-        "instant download",
-        "digital planner",
-        "printable planner",
-        "undated planner",
-        "habit tracker",
-        "self care",
-        "goal setting",
-        "sage green planner",
-        "sobriety gift",
-        "recovery gift idea"
-      ]
-    },
-    "activated_at": "2026-04-03T19:57:05"
-  },
-  {
-    "listing_id": "4482516657",
-    "shop_id": "65243737",
-    "publish_at": "2026-04-03T22:40:00",
-    "label": "daily×sage_green",
-    "done": true,
-    "pinterest_info": {
-      "title": "ADHD Teacher Planner Printable for Teachers with ADHD, Simplified Organization PDF",
-      "image_path": "output/planner/bfd40f33/mockups/01_hero.jpg",
-      "niche": "ADHD_teacher",
-      "tags": [
-        "adhd planner",
-        "printable planner",
-        "instant download",
-        "digital planner",
-        "weekly planner",
-        "productivity planner",
-        "goal setting",
-        "habit tracker",
-        "gratitude journal",
-        "life planner",
-        "sage green planner",
-        "adhd teacher gift",
-        "teacher gift idea"
-      ]
-    },
-    "activated_at": "2026-04-03T23:51:18"
-  },
-  {
-    "listing_id": "4482517047",
-    "shop_id": "65243737",
-    "publish_at": "2026-04-04T02:14:21",
-    "label": "daily×sage_green",
-    "done": true,
-    "pinterest_info": {
-      "title": "Christian Teacher Planner Printable for faith-based teachers who teach with purpose and prayer, Mindful Organization PDF",
-      "image_path": "output/planner/4d9ed5fb/mockups/01_hero.jpg",
-      "niche": "christian_teacher",
-      "tags": [
-        "instant download",
-        "printable planner",
-        "digital planner",
-        "life planner",
-        "productivity planner",
-        "goal setting planner",
-        "weekly planner",
-        "digital planner pdf",
-        "undated planner",
-        "habit tracker",
-        "sage green planner",
-        "christian teacher gi",
-        "faith teacher gift"
-      ]
-    },
-    "activated_at": "2026-04-04T05:16:36"
+    }
   }
 ]

@@ -722,14 +722,13 @@ def main():
         print_status()
         return
 
-    # ── 큐 미발행 항목 수 확인 (이미 충분히 쌓여있으면 생성 스킵) ──
-    # count는 아직 미결정이므로 args.count 기본값(4) 사용
+    # ── 큐 미발행 항목 수 확인 (미발행 항목이 1개라도 있으면 생성 스킵) ──
+    # Why: 이전 배치가 아직 발행 안 됐으면 새로 생성하지 않음 → 과다 발행 완전 차단
     _pending_check = [e for e in _load_queue() if not e.get("done")]
-    _skip_threshold = args.count  # 오토스케일 전 기본값 기준
-    if args.publish and not args.force and len(_pending_check) >= _skip_threshold:
+    if args.publish and not args.force and len(_pending_check) >= 1:
         logger.warning(
-            "⚠️ 미발행 큐 %d개 — 이미 충분함 (기준: %d개). 생성 스킵. "
-            "강제 실행하려면 --force 플래그 사용.", len(_pending_check), _skip_threshold
+            "⚠️ 미발행 큐 %d개 — 발행 완료 후 재실행 필요. "
+            "강제 실행하려면 --force 플래그 사용.", len(_pending_check)
         )
         _release_lock()
         return
@@ -737,19 +736,8 @@ def main():
         os.environ["WALL_ART_MOCK"] = "true"
         logger.info("*** MOCK 모드 — 이미지 API 없음, 비용 $0 ***")
 
-    # ── 오토스케일: --count/--interval 미지정 시 자동 결정 ──
     count    = args.count
     interval = args.interval
-    if args.publish and count == 4 and interval == 3.0:
-        # 기본값 그대로면 오토스케일 시도
-        try:
-            from config.settings import ETSY_SHOP_ID
-            from publisher.etsy_api import get_shop_id
-            _sid = ETSY_SHOP_ID or get_shop_id()
-            if _sid:
-                count, interval = _auto_count_interval(_sid)
-        except Exception:
-            pass  # 조회 실패 시 기본값 유지
 
     combos = get_next_combos(count)
     logger.info("오늘 생성할 %d개 (%.0f시간 간격 예약):", len(combos), interval)
