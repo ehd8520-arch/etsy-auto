@@ -1,9 +1,9 @@
 name: Daily Etsy Auto Generate
 
 on:
-  schedule:
-    - cron: '0 0 * * *'   # 매일 UTC 00:00 (한국시간 09:00) — 상품 생성
-    - cron: '0 * * * *'   # 매시간 — 주문 알림 + 큐 활성화
+  # schedule:
+  #   - cron: '0 0 * * *'   # 매일 UTC 00:00 (한국시간 09:00) — 상품 생성
+  #   - cron: '0 * * * *'   # 매시간 — 주문 알림 + 큐 활성화
   workflow_dispatch:       # 수동 실행 가능
 
 concurrency:
