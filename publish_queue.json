@@ -362,5 +362,86 @@
       ]
     },
     "activated_at": "2026-04-04T23:02:11"
+  },
+  {
+    "listing_id": "4483454528",
+    "shop_id": "65243737",
+    "publish_at": "2026-04-06T14:14:21",
+    "label": "daily×sage_green",
+    "done": false,
+    "pinterest_info": {
+      "title": "Self Care Planner Printable for women prioritizing their wellness, mindful minimalist routines PDF",
+      "image_path": "output/planner/ba9004ac/mockups/01_hero.jpg",
+      "niche": "self_care",
+      "tags": [
+        "self care planner",
+        "digital planner",
+        "printable planner",
+        "productivity planner",
+        "goal setting planner",
+        "life planner",
+        "habit tracker",
+        "gratitude journal",
+        "fitness planner",
+        "instant download",
+        "sage green planner",
+        "self care gift idea",
+        "wellness gift idea"
+      ]
+    }
+  },
+  {
+    "listing_id": "4483448935",
+    "shop_id": "65243737",
+    "publish_at": "2026-04-06T17:10:14",
+    "label": "daily×sage_green",
+    "done": false,
+    "pinterest_info": {
+      "title": "Teacher Planner Printable for Teachers who need to manage lessons, students, and self-care, Minimalist Organization PDF",
+      "image_path": "output/planner/d9a4eeec/mockups/01_hero.jpg",
+      "niche": "teacher",
+      "tags": [
+        "printable planner",
+        "digital planner",
+        "weekly planner",
+        "self care",
+        "instant download",
+        "productivity",
+        "goal setting",
+        "habit tracker",
+        "gratitude",
+        "life planner",
+        "sage green planner",
+        "teacher gift idea",
+        "gift for teacher"
+      ]
+    }
+  },
+  {
+    "listing_id": "4483455266",
+    "shop_id": "65243737",
+    "publish_at": "2026-04-06T20:04:50",
+    "label": "daily×sage_green",
+    "done": false,
+    "pinterest_info": {
+      "title": "Business Planner Printable for entrepreneurs and side hustlers scaling their business, simplified organization PDF",
+      "image_path": "output/planner/24b9fa4a/mockups/01_hero.jpg",
+      "niche": "entrepreneur",
+      "tags": [
+        "printable planner",
+        "digital planner",
+        "productivity planner",
+        "goal setting",
+        "habit tracker",
+        "weekly planner",
+        "undated planner",
+        "instant download",
+        "life planner",
+        "digital planner pdf",
+        "sage green planner",
+        "boss babe gift",
+        "entrepreneur gift id"
+      ]
+    }
   }
 ]

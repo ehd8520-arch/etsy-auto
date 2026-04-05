@@ -18,7 +18,11 @@
     "daily_sage_green_christian",
     "daily_sage_green_sobriety",
     "daily_sage_green_ADHD_teacher",
-    "daily_sage_green_christian_teacher"
+    "daily_sage_green_christian_teacher",
+    "daily_sage_green_homeschool",
+    "daily_sage_green_self_care",
+    "daily_sage_green_teacher",
+    "daily_sage_green_entrepreneur"
   ],
   "v2_published": [],
   "pruned_combos": [],
@@ -42,7 +46,11 @@
     "daily_sage_green_christian": "4482521426",
     "daily_sage_green_sobriety": "4482521916",
     "daily_sage_green_ADHD_teacher": "4482516657",
-    "daily_sage_green_christian_teacher": "4482517047"
+    "daily_sage_green_christian_teacher": "4482517047",
+    "daily_sage_green_homeschool": "4483454144",
+    "daily_sage_green_self_care": "4483454528",
+    "daily_sage_green_teacher": "4483448935",
+    "daily_sage_green_entrepreneur": "4483455266"
   },
   "combo_ids": {
     "daily_sage_green_mom": "a929609b",
@@ -64,6 +72,11 @@
     "daily_sage_green_christian": "cfe4fa17",
     "daily_sage_green_sobriety": "576a5a90",
     "daily_sage_green_ADHD_teacher": "bfd40f33",
-    "daily_sage_green_christian_teacher": "4d9ed5fb"
-  }
+    "daily_sage_green_christian_teacher": "4d9ed5fb",
+    "daily_sage_green_homeschool": "f77620aa",
+    "daily_sage_green_self_care": "ba9004ac",
+    "daily_sage_green_teacher": "d9a4eeec",
+    "daily_sage_green_entrepreneur": "24b9fa4a"
+  },
+  "last_generated_date": "2026-04-05"
 }
