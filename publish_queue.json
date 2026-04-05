@@ -368,7 +368,7 @@
     "shop_id": "65243737",
     "publish_at": "2026-04-06T14:14:21",
     "label": "daily×sage_green",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Self Care Planner Printable for women prioritizing their wellness, mindful minimalist routines PDF",
       "image_path": "output/planner/ba9004ac/mockups/01_hero.jpg",
@@ -388,14 +388,15 @@
         "self care gift idea",
         "wellness gift idea"
       ]
-    }
+    },
+    "activated_at": "CANCELLED"
   },
   {
     "listing_id": "4483448935",
     "shop_id": "65243737",
     "publish_at": "2026-04-06T17:10:14",
     "label": "daily×sage_green",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Teacher Planner Printable for Teachers who need to manage lessons, students, and self-care, Minimalist Organization PDF",
       "image_path": "output/planner/d9a4eeec/mockups/01_hero.jpg",
@@ -415,14 +416,15 @@
         "teacher gift idea",
         "gift for teacher"
       ]
-    }
+    },
+    "activated_at": "CANCELLED"
   },
   {
     "listing_id": "4483455266",
     "shop_id": "65243737",
     "publish_at": "2026-04-06T20:04:50",
     "label": "daily×sage_green",
-    "done": false,
+    "done": true,
     "pinterest_info": {
       "title": "Business Planner Printable for entrepreneurs and side hustlers scaling their business, simplified organization PDF",
       "image_path": "output/planner/24b9fa4a/mockups/01_hero.jpg",
@@ -442,6 +444,7 @@
         "boss babe gift",
         "entrepreneur gift id"
       ]
-    }
+    },
+    "activated_at": "CANCELLED"
   }
 ]
