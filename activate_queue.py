@@ -41,6 +41,14 @@ logger = logging.getLogger("activate_queue")
 sys.path.insert(0, str(Path(__file__).parent))
 
 QUEUE_FILE = Path(__file__).parent / "publish_queue.json"
+STOP_FILE  = Path(__file__).parent / "STOP"
+
+
+def _check_stop():
+    """STOP 파일이 있으면 즉시 종료."""
+    if STOP_FILE.exists():
+        logger.info("🛑 STOP 파일 감지 — 발행 중지됨 (%s)", STOP_FILE)
+        sys.exit(0)
 
 
 def _load_queue() -> list:
@@ -175,6 +183,7 @@ def _pin_from_queue(entry: dict) -> None:
 
 def run(dry: bool = False) -> int:
     """발행 시각이 된 드래프트 활성화. 처리한 항목 수 반환."""
+    _check_stop()
     queue = _load_queue()
     if not queue:
         logger.info("큐 비어 있음 — 처리할 항목 없음")

@@ -44,6 +44,12 @@ logger = logging.getLogger("daily_generate")
 
 sys.path.insert(0, str(Path(__file__).parent))
 
+# ── STOP 파일 체크 ──
+_STOP_FILE = Path(__file__).parent / "STOP"
+if _STOP_FILE.exists():
+    logger.info("🛑 STOP 파일 감지 — 실행 중지됨 (%s)", _STOP_FILE)
+    sys.exit(0)
+
 # ── 조합 정의 ──
 # 타입 순서 = Etsy 검색 수요 우선순위 (eRank 기준)
 PLANNER_TYPES = [

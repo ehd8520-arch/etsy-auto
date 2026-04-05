@@ -13,6 +13,7 @@ concurrency:
 jobs:
   # ── 매시간 job: 주문알림 + 큐 활성화 ──────────────────────────────────────
   hourly:
+    if: false  # 🛑 수동 중지 — 재개 시 이 줄 삭제
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -100,9 +101,9 @@ jobs:
 
   # ── 매일 job: 상품 생성 (UTC 00:00에만 실행) ─────────────────────────────
   daily:
+    if: false  # 🛑 수동 중지 — 재개 시 이 줄 삭제
     runs-on: ubuntu-latest
     timeout-minutes: 120
-    if: ${{ github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch' }}
     permissions:
       contents: write
 
